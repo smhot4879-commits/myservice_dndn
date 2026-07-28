@@ -61,7 +61,7 @@ const MainContent: React.FC = () => {
     <div className="min-h-screen bg-[#EFF2F8] text-[#1b1c1c] flex flex-col font-sans antialiased">
       <Sidebar />
       <Header />
-      <main className="flex-1 md:ml-64 pt-20 pb-20 md:pb-12 px-4 sm:px-6 md:px-8 max-w-[1400px] w-full mx-auto">
+      <main className="flex-1 md:ml-64 pt-20 sm:pt-24 pb-20 md:pb-12 px-3.5 sm:px-6 md:px-8 max-w-[1400px] w-full mx-auto overflow-x-hidden">
         {renderView()}
       </main>
       <Footer />

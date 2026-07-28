@@ -21,6 +21,7 @@ export const LandlordDashboardView: React.FC = () => {
   const {
     setActiveTab,
     setActiveRepairId,
+    activeRepairId,
     repairCases,
     propertyUnits,
     addPropertyUnit,
@@ -32,8 +33,8 @@ export const LandlordDashboardView: React.FC = () => {
   const [newAddress, setNewAddress] = useState('');
   const [newTenant, setNewTenant] = useState('');
 
-  // Get current active case or default to req-001
-  const activeCase = repairCases.find((c) => c.id === 'req-001') || repairCases[0];
+  // Get current active case or default to newest case
+  const activeCase = repairCases.find((c) => c.id === activeRepairId) || repairCases[0];
 
   const handleAddUnitSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -102,80 +103,51 @@ export const LandlordDashboardView: React.FC = () => {
             </div>
 
             <div className="space-y-3.5">
-              {/* Task 1 */}
-              <div
-                onClick={() => {
-                  setActiveRepairId('req-002');
-                  setActiveTab('chat');
-                }}
-                className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border-2 border-[#FFFC00] hover:border-[#0054cc] transition-all bg-[#fcf9f8] hover:shadow-md cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#EF4444]/10 flex items-center justify-center text-[#EF4444]">
-                    <Wrench className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-[#1b1c1c]">302호 수리 요청 접수됨</h4>
-                    <p className="text-xs text-[#424655]">욕실 세면대 누수 • 1시간 전</p>
-                  </div>
-                </div>
-                <div className="mt-3 sm:mt-0 flex items-center justify-between sm:justify-end gap-3">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#EF4444]/10 text-[#EF4444]">
-                    대기 중
-                  </span>
-                  <ChevronRight className="w-5 h-5 text-[#727787] group-hover:text-[#0054cc] group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </div>
+              {repairCases.map((rc) => {
+                const statusMap: Record<string, { label: string; bg: string; text: string; icon: React.ReactNode }> = {
+                  REQUESTED: { label: '요청 완료', bg: 'bg-[#EF4444]/10', text: 'text-[#EF4444]', icon: <Wrench className="w-6 h-6" /> },
+                  QUOTE_UPLOADED: { label: '견적 도착', bg: 'bg-[#F59E0B]/10', text: 'text-[#F59E0B]', icon: <Receipt className="w-6 h-6" /> },
+                  APPROVED: { label: '승인 완료', bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]', icon: <CheckCircle2 className="w-6 h-6" /> },
+                  COMPLETED: { label: '처리 완료', bg: 'bg-[#10B981]/10', text: 'text-[#10B981]', icon: <CheckCircle2 className="w-6 h-6" /> },
+                };
+                const statusInfo = statusMap[rc.status] || {
+                  label: rc.status,
+                  bg: 'bg-[#0054cc]/10',
+                  text: 'text-[#0054cc]',
+                  icon: <Wrench className="w-6 h-6" />,
+                };
 
-              {/* Task 2 */}
-              <div
-                onClick={() => {
-                  setActiveRepairId('req-001');
-                  setActiveTab('estimates');
-                }}
-                className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border-2 border-[#FFFC00] hover:border-[#0054cc] transition-all bg-[#fcf9f8] hover:shadow-md cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#F59E0B]/10 flex items-center justify-center text-[#F59E0B]">
-                    <Receipt className="w-6 h-6" />
+                return (
+                  <div
+                    key={rc.id}
+                    onClick={() => {
+                      setActiveRepairId(rc.id);
+                      setActiveTab('chat');
+                    }}
+                    className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border-2 border-[#FFFC00] hover:border-[#0054cc] transition-all bg-[#fcf9f8] hover:shadow-md cursor-pointer"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className={`w-12 h-12 rounded-xl ${statusInfo.bg} flex items-center justify-center ${statusInfo.text}`}>
+                        {statusInfo.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-sm text-[#1b1c1c]">
+                          {rc.unit} 수리 요청 ({rc.title})
+                        </h4>
+                        <p className="text-xs text-[#424655]">
+                          {rc.symptom} • #{rc.id} • {rc.createdAt}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="mt-3 sm:mt-0 flex items-center justify-between sm:justify-end gap-3">
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusInfo.bg} ${statusInfo.text}`}>
+                        {statusInfo.label}
+                      </span>
+                      <ChevronRight className="w-5 h-5 text-[#727787] group-hover:text-[#0054cc] group-hover:translate-x-0.5 transition-all" />
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-[#1b1c1c]">101호 견적 승인 대기</h4>
-                    <p className="text-xs text-[#424655]">에어컨 냉매 충전 (비교 견적 3건) • 3시간 전</p>
-                  </div>
-                </div>
-                <div className="mt-3 sm:mt-0 flex items-center justify-between sm:justify-end gap-3">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#F59E0B]/10 text-[#F59E0B]">
-                    승인 대기
-                  </span>
-                  <ChevronRight className="w-5 h-5 text-[#727787] group-hover:text-[#0054cc] group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </div>
-
-              {/* Task 3 */}
-              <div
-                onClick={() => {
-                  setActiveRepairId('req-003');
-                  setActiveTab('completion');
-                }}
-                className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border-2 border-[#FFFC00] hover:border-[#0054cc] transition-all bg-[#fcf9f8] hover:shadow-md cursor-pointer"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-xl bg-[#10B981]/10 flex items-center justify-center text-[#10B981]">
-                    <CheckCircle2 className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-[#1b1c1c]">504호 입주 전 점검 완료</h4>
-                    <p className="text-xs text-[#424655]">도배 및 장판 교체 • 어제</p>
-                  </div>
-                </div>
-                <div className="mt-3 sm:mt-0 flex items-center justify-between sm:justify-end gap-3">
-                  <span className="px-3 py-1 rounded-full text-xs font-bold bg-[#10B981]/10 text-[#10B981]">
-                    처리 완료
-                  </span>
-                  <ChevronRight className="w-5 h-5 text-[#727787] group-hover:text-[#0054cc] group-hover:translate-x-0.5 transition-all" />
-                </div>
-              </div>
+                );
+              })}
             </div>
           </div>
 

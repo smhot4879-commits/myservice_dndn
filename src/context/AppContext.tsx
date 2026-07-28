@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import {
   Role,
   RepairCase,
@@ -118,6 +118,63 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  const isNavigatingHistoryRef = useRef(false);
+
+  // Helper to push state into HTML5 history API
+  const pushNavHistory = (newRole: Role, newTab: string, newRepairId: string, replace = false) => {
+    if (isNavigatingHistoryRef.current) return;
+    try {
+      const newState = { role: newRole, activeTab: newTab, activeRepairId: newRepairId };
+      const curState = window.history.state;
+      if (
+        !curState ||
+        curState.role !== newRole ||
+        curState.activeTab !== newTab ||
+        curState.activeRepairId !== newRepairId
+      ) {
+        if (replace) {
+          window.history.replaceState(newState, '');
+        } else {
+          window.history.pushState(newState, '');
+        }
+      }
+    } catch (e) {
+      console.error('History API error:', e);
+    }
+  };
+
+  // Synchronize history popstate listener for mobile back button navigation
+  useEffect(() => {
+    const initialState = { role, activeTab, activeRepairId };
+    if (!window.history.state) {
+      window.history.replaceState(initialState, '');
+    }
+
+    const handlePopState = (event: PopStateEvent) => {
+      if (event.state && typeof event.state === 'object') {
+        isNavigatingHistoryRef.current = true;
+        if (event.state.role) setRoleState(event.state.role);
+        if (event.state.activeTab) setActiveTabState(event.state.activeTab);
+        if (event.state.activeRepairId) setActiveRepairIdState(event.state.activeRepairId);
+        setTimeout(() => {
+          isNavigatingHistoryRef.current = false;
+        }, 50);
+      } else {
+        isNavigatingHistoryRef.current = true;
+        setRoleState('SELECTION');
+        setActiveTabState('selection');
+        setTimeout(() => {
+          isNavigatingHistoryRef.current = false;
+        }, 50);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => {
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, []);
+
   // Local storage sync for session state
   useEffect(() => {
     localStorage.setItem('db_role', role);
@@ -149,6 +206,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         });
       } else {
         const items = snapshot.docs.map((doc) => doc.data() as RepairCase);
+        // Sort newest first by createdAt or ID
+        items.sort((a, b) => {
+          const dateA = a.createdAt ? new Date(a.createdAt.replace(/\./g, '-')).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt.replace(/\./g, '-')).getTime() : 0;
+          if (!isNaN(dateA) && !isNaN(dateB) && dateA !== dateB) {
+            return dateB - dateA;
+          }
+          return b.id.localeCompare(a.id);
+        });
         setRepairCases(items);
       }
     });
@@ -202,26 +268,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   }, []);
 
   const setRole = (newRole: Role, targetTab?: string) => {
-    setRoleState(newRole);
+    let nextTab = 'dashboard';
     if (newRole === 'SELECTION') {
-      setActiveTabState('selection');
+      nextTab = 'selection';
     } else if (targetTab) {
-      setActiveTabState(targetTab);
+      nextTab = targetTab;
     } else if (newRole === 'LANDLORD') {
-      setActiveTabState('landlord-register');
+      nextTab = 'landlord-register';
     } else if (newRole === 'TENANT') {
-      setActiveTabState('tenant-register');
-    } else {
-      setActiveTabState('dashboard');
+      nextTab = 'tenant-register';
     }
+    setRoleState(newRole);
+    setActiveTabState(nextTab);
+    pushNavHistory(newRole, nextTab, activeRepairId);
   };
 
   const setActiveTab = (tab: string) => {
     setActiveTabState(tab);
+    pushNavHistory(role, tab, activeRepairId);
   };
 
   const setActiveRepairId = (id: string) => {
     setActiveRepairIdState(id);
+    localStorage.setItem('db_activeRepairId', id);
+    pushNavHistory(role, activeTab, id);
   };
 
   const logout = () => {
@@ -229,6 +299,7 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setActiveTabState('selection');
     localStorage.removeItem('db_role');
     localStorage.removeItem('db_activeTab');
+    pushNavHistory('SELECTION', 'selection', activeRepairId);
   };
 
   const addRepairCase = (data: {

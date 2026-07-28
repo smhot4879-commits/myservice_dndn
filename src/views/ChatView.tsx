@@ -42,7 +42,7 @@ export const ChatView: React.FC = () => {
   const caseMessages = currentCase ? chatMessages.filter((m) => m.repairCaseId === currentCase.id) : [];
 
   const [inputMsg, setInputMsg] = useState('');
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Invite Vendor Modal States
   const [showInviteModal, setShowInviteModal] = useState(false);
@@ -54,9 +54,24 @@ export const ChatView: React.FC = () => {
   const [generatedInviteCode, setGeneratedInviteCode] = useState<string | null>(null);
   const [copiedToast, setCopiedToast] = useState(false);
 
+  const scrollToBottom = (smooth = true) => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: smooth ? 'smooth' : 'auto',
+      });
+    }
+  };
+
   useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    scrollToBottom(true);
   }, [caseMessages]);
+
+  const handleInputFocus = () => {
+    setTimeout(() => {
+      scrollToBottom(true);
+    }, 150);
+  };
 
   if (!currentCase) {
     return (
@@ -93,6 +108,9 @@ export const ChatView: React.FC = () => {
 
     sendChatMessage(currentCase.id, senderRole, senderName, inputMsg);
     setInputMsg('');
+    setTimeout(() => {
+      scrollToBottom(true);
+    }, 50);
   };
 
   const handleQuickHashtag = (tag: string) => {
@@ -120,6 +138,7 @@ export const ChatView: React.FC = () => {
           '에어컨 냉매 가스 회수 완충 및 정밀 교체 작업이 완료되었습니다. 시원한 정상 냉풍 확인했습니다.'
         );
       }
+      setTimeout(() => scrollToBottom(true), 50);
       return;
     }
 
@@ -147,6 +166,7 @@ export const ChatView: React.FC = () => {
         '업체 수리비 ₩150,000 송금이 완료되었습니다. 정산 확인 부탁드립니다.'
       );
     }
+    setTimeout(() => scrollToBottom(true), 50);
   };
 
   const handleSendInviteLink = (e: React.FormEvent) => {
@@ -322,18 +342,18 @@ export const ChatView: React.FC = () => {
       {/* Main Grid: Chat Stream (Left 8 cols) & Case Summary Sidebar (Right 4 cols) */}
       <div className="grid grid-cols-12 gap-6">
         {/* Chat Messages Stream */}
-        <div className="col-span-12 lg:col-span-8 bg-white rounded-3xl shadow-xs border border-[#c2c6d8]/40 flex flex-col h-[620px]">
+        <div className="col-span-12 lg:col-span-8 bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-[#c2c6d8]/40 flex flex-col h-[520px] sm:h-[620px] overflow-hidden">
           {/* Stream Header */}
-          <div className="p-4 border-b border-[#c2c6d8]/30 flex justify-between items-center bg-[#fcf9f8] rounded-t-3xl">
+          <div className="p-3.5 sm:p-4 border-b border-[#c2c6d8]/30 flex justify-between items-center bg-[#fcf9f8] rounded-t-2xl sm:rounded-t-3xl shrink-0">
             <div className="flex items-center gap-2">
               <ShieldCheck className="w-5 h-5 text-[#0054cc]" />
               <span className="font-bold text-xs text-[#1b1c1c]">법적 근거 보관 3자 실시간 대화방</span>
             </div>
-            <span className="text-[11px] text-[#727787]">메시지는 실시간 서명 기록됩니다</span>
+            <span className="text-[10px] sm:text-[11px] text-[#727787]">메시지는 실시간 서명 기록됩니다</span>
           </div>
 
           {/* Messages Scroll Area */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
+          <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
             {/* Embedded Move In Record Card */}
             {currentCase.moveInRecord && (
               <div className="bg-[#dae2ff]/30 p-4 rounded-2xl border border-[#0054cc]/20 space-y-2 max-w-lg mx-auto">
@@ -406,11 +426,10 @@ export const ChatView: React.FC = () => {
                 </div>
               );
             })}
-            <div ref={chatEndRef} />
           </div>
 
           {/* Quick Hashtag Chips */}
-          <div className="px-4 py-2 border-t border-[#c2c6d8]/30 bg-[#fcf9f8] flex items-center gap-2 overflow-x-auto">
+          <div className="px-3 sm:px-4 py-2 border-t border-[#c2c6d8]/30 bg-[#fcf9f8] flex items-center gap-2 overflow-x-auto shrink-0">
             <span className="text-[11px] font-bold text-[#727787] whitespace-nowrap">빠른 입력:</span>
 
             {role === 'VENDOR' ? (
@@ -459,7 +478,7 @@ export const ChatView: React.FC = () => {
           </div>
 
           {/* Input Box Bar */}
-          <form onSubmit={handleSend} className="p-3 border-t border-[#c2c6d8]/40 flex items-center gap-2 bg-white rounded-b-3xl">
+          <form onSubmit={handleSend} className="p-2.5 sm:p-3 border-t border-[#c2c6d8]/40 flex items-center gap-2 bg-white rounded-b-2xl sm:rounded-b-3xl shrink-0">
             {/* Photo Upload Button */}
             <button
               type="button"
@@ -474,7 +493,7 @@ export const ChatView: React.FC = () => {
                   sampleImg
                 );
               }}
-              className="p-2.5 text-[#727787] hover:text-[#0054cc] hover:bg-[#f0eded] rounded-xl transition-colors cursor-pointer"
+              className="p-2.5 text-[#727787] hover:text-[#0054cc] hover:bg-[#f0eded] rounded-xl transition-colors cursor-pointer shrink-0"
               title="사진 첨부"
             >
               <ImageIcon className="w-5 h-5" />
@@ -487,7 +506,7 @@ export const ChatView: React.FC = () => {
                 setGeneratedInviteCode(null);
                 setShowInviteModal(true);
               }}
-              className="px-3 py-2 bg-[#0054cc]/10 hover:bg-[#0054cc]/20 text-[#0054cc] font-extrabold text-xs rounded-xl flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap"
+              className="px-3 py-2 bg-[#0054cc]/10 hover:bg-[#0054cc]/20 text-[#0054cc] font-extrabold text-xs rounded-xl flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0"
               title="수리업체 무로그인 대화방 초대"
             >
               <UserPlus className="w-4 h-4 text-[#0054cc]" />
@@ -498,17 +517,18 @@ export const ChatView: React.FC = () => {
               type="text"
               value={inputMsg}
               onChange={(e) => setInputMsg(e.target.value)}
+              onFocus={handleInputFocus}
               placeholder={
                 role === 'VENDOR'
                   ? '수리 기사 메시지를 입력하세요 (견적, 일정 등)...'
                   : '투명 수리 협의 메시지를 입력하세요...'
               }
-              className="flex-1 py-2.5 px-4 bg-[#f6f3f2] focus:bg-white border border-transparent focus:border-[#0054cc] rounded-2xl outline-none text-sm transition-all"
+              className="flex-1 py-2.5 px-3.5 sm:px-4 bg-[#f6f3f2] focus:bg-white border border-transparent focus:border-[#0054cc] rounded-2xl outline-none text-xs sm:text-sm transition-all"
             />
 
             <button
               type="submit"
-              className="p-3 bg-[#0054cc] hover:bg-[#066bfd] text-white rounded-2xl shadow-md active:scale-95 transition-all cursor-pointer"
+              className="p-3 bg-[#0054cc] hover:bg-[#066bfd] text-white rounded-2xl shadow-md active:scale-95 transition-all cursor-pointer shrink-0"
             >
               <Send className="w-4 h-4" />
             </button>

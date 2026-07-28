@@ -34,26 +34,10 @@ export const Header: React.FC = () => {
 
       {/* Right Controls */}
       <div className="flex items-center gap-2.5 sm:gap-4">
-        {/* Role Quick Switcher Badge */}
-        <button
-          onClick={() => {
-            if (role === 'LANDLORD') setRole('TENANT');
-            else if (role === 'TENANT') setRole('LANDLORD');
-            else setRole('LANDLORD');
-          }}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold active:scale-95 transition-all shadow-2xs cursor-pointer ${
-            role === 'VENDOR'
-              ? 'bg-[#10B981]/15 text-[#065F46] border border-[#10B981]/30'
-              : 'bg-[#dae2ff] text-[#001847] hover:bg-[#b1c5ff]'
-          }`}
-          title="포털 화면 전환"
-        >
-          <ArrowLeftRight className="w-3.5 h-3.5 text-[#0054cc]" />
-          <span>
-            {role === 'LANDLORD' ? '임대인 포털' : role === 'TENANT' ? '임차인 포털' : '수리업체 (로그인없음)'}
-          </span>
-          <span className="text-[10px] opacity-70 bg-white/60 px-1.5 py-0.5 rounded-full">전환</span>
-        </button>
+        {/* Current Role Badge (Static) */}
+        <div className="px-2.5 py-1 bg-[#0054cc]/10 text-[#0054cc] font-extrabold text-xs rounded-full flex items-center gap-1">
+          <span>{role === 'LANDLORD' ? '임대인' : role === 'TENANT' ? '임차인' : '수리업체'}</span>
+        </div>
 
         {/* Notifications Button */}
         <button
