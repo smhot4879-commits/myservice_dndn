@@ -45,7 +45,7 @@ export interface UserProfileData {
 
 interface AppContextType {
   role: Role;
-  setRole: (role: Role) => void;
+  setRole: (role: Role, targetTab?: string) => void;
   activeTab: string;
   setActiveTab: (tab: string) => void;
   activeRepairId: string;
@@ -201,10 +201,16 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     };
   }, []);
 
-  const setRole = (newRole: Role) => {
+  const setRole = (newRole: Role, targetTab?: string) => {
     setRoleState(newRole);
     if (newRole === 'SELECTION') {
       setActiveTabState('selection');
+    } else if (targetTab) {
+      setActiveTabState(targetTab);
+    } else if (newRole === 'LANDLORD') {
+      setActiveTabState('landlord-register');
+    } else if (newRole === 'TENANT') {
+      setActiveTabState('tenant-register');
     } else {
       setActiveTabState('dashboard');
     }

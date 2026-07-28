@@ -41,13 +41,32 @@ export const TenantRegisterView: React.FC = () => {
   };
 
   const handleLogout = () => {
-    if (confirm('로그아웃 하시겠습니까? 역할 선택 화면으로 이동합니다.')) {
-      logout();
-    }
+    logout();
   };
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-300">
+      {/* Banner indicating auto-login completed */}
+      <div className="bg-[#636100]/10 border border-[#636100]/30 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-[#636100] text-white flex items-center justify-center font-extrabold text-sm shrink-0">
+            ✓
+          </div>
+          <div>
+            <h3 className="text-sm font-extrabold text-[#1b1c1c]">임차인 회원가입 및 자동 로그인 완료</h3>
+            <p className="text-xs text-[#424655]">기본 회원 정보 및 거주지 정보를 확인 후 수리 요청 서비스를 이용해 보세요.</p>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="px-4 py-2 bg-white text-[#ef4444] border border-[#ef4444]/30 hover:bg-[#ef4444] hover:text-white font-bold text-xs rounded-xl shadow-2xs transition-all flex items-center justify-center gap-1.5 cursor-pointer shrink-0"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span>로그아웃</span>
+        </button>
+      </div>
+
       <div className="flex items-center justify-between border-b border-[#c2c6d8]/40 pb-4">
         <button
           onClick={() => setActiveTab('dashboard')}
@@ -209,18 +228,18 @@ export const TenantRegisterView: React.FC = () => {
           className="w-full py-4 bg-[#0054cc] text-white font-bold text-base rounded-2xl shadow-lg hover:bg-[#066bfd] transition-all flex items-center justify-center gap-2 cursor-pointer"
         >
           <Save className="w-5 h-5" />
-          <span>정보 저장 및 완료</span>
+          <span>회원가입 및 정보 저장 완료 (대시보드로 이동)</span>
         </button>
 
-        {/* Subtle Bottom Logout Button */}
+        {/* Bottom Logout Button */}
         <div className="pt-6 border-t border-[#c2c6d8]/30 flex justify-center">
           <button
             type="button"
             onClick={handleLogout}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-medium text-[#727787] hover:text-[#1b1c1c] bg-[#f0eded]/80 hover:bg-[#e5e2e1] border border-[#c2c6d8]/40 transition-all cursor-pointer"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl text-xs font-bold text-[#ef4444] hover:text-white bg-[#ef4444]/10 hover:bg-[#ef4444] border border-[#ef4444]/30 transition-all cursor-pointer shadow-2xs"
           >
-            <LogOut className="w-4 h-4 text-[#727787]" />
-            <span>로그아웃</span>
+            <LogOut className="w-4 h-4" />
+            <span>로그아웃 (역할 선택으로 돌아가기)</span>
           </button>
         </div>
       </form>

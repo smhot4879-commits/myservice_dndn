@@ -33,7 +33,7 @@ export const RoleSelectionView: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
           {/* Landlord Card */}
           <button
-            onClick={() => setRole('LANDLORD')}
+            onClick={() => setRole('LANDLORD', 'auth')}
             className="group relative flex flex-col items-center p-8 sm:p-10 bg-white border border-[#c2c6d8]/40 rounded-3xl card-shadow card-hover transition-all duration-300 text-left cursor-pointer"
           >
             <div className="w-20 h-20 mb-6 rounded-2xl bg-[#0054cc]/10 flex items-center justify-center text-[#0054cc] transition-all duration-300 group-hover:bg-[#0054cc] group-hover:text-white group-hover:scale-105">
@@ -49,15 +49,18 @@ export const RoleSelectionView: React.FC = () => {
               </div>
 
               <h3 className="text-2xl font-bold text-[#1b1c1c] mb-2">임대인입니다</h3>
-              <p className="text-sm text-[#424655] leading-relaxed">
+              <p className="text-sm text-[#424655] leading-relaxed mb-4">
                 보유 건물을 효율적으로 관리하고, 수리 요청 응대 및 임대 계약 현황을 한눈에 파악하세요.
               </p>
+              <div className="text-xs font-bold text-[#0054cc] bg-[#0054cc]/5 py-2 px-3 rounded-xl border border-[#0054cc]/20 flex items-center gap-1.5">
+                <span>🔐 임대인 로그인 / 신규 회원가입</span>
+              </div>
             </div>
           </button>
 
           {/* Tenant Card */}
           <button
-            onClick={() => setRole('TENANT')}
+            onClick={() => setRole('TENANT', 'auth')}
             className="group relative flex flex-col items-center p-8 sm:p-10 bg-white border border-[#c2c6d8]/40 rounded-3xl card-shadow card-hover transition-all duration-300 text-left cursor-pointer"
           >
             <div className="w-20 h-20 mb-6 rounded-2xl bg-[#636100]/10 flex items-center justify-center text-[#636100] transition-all duration-300 group-hover:bg-[#636100] group-hover:text-white group-hover:scale-105">
@@ -73,9 +76,12 @@ export const RoleSelectionView: React.FC = () => {
               </div>
 
               <h3 className="text-2xl font-bold text-[#1b1c1c] mb-2">임차인입니다</h3>
-              <p className="text-sm text-[#424655] leading-relaxed">
+              <p className="text-sm text-[#424655] leading-relaxed mb-4">
                 수리 요청을 간편하게 접수하고 진행 상태를 확인하며, 계약 정보와 법률 가이드를 손쉽게 조회하세요.
               </p>
+              <div className="text-xs font-bold text-[#636100] bg-[#e9e600]/20 py-2 px-3 rounded-xl border border-[#636100]/20 flex items-center gap-1.5">
+                <span>🔐 임차인 로그인 / 신규 회원가입</span>
+              </div>
             </div>
           </button>
         </div>

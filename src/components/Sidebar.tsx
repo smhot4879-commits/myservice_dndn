@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { role, setRole, activeTab, setActiveTab, notifications, resetAllData } = useApp();
+  const { role, setRole, activeTab, setActiveTab, notifications, resetAllData, logout } = useApp();
 
   if (activeTab === 'selection') return null;
 
@@ -55,11 +55,11 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <button
-          onClick={() => setRole('SELECTION')}
-          className="text-[11px] text-[#0054cc] hover:underline font-semibold flex items-center gap-1 mt-1 cursor-pointer"
-          title="역할 선택 화면으로 이동"
+          onClick={() => logout()}
+          className="text-[11px] text-[#ef4444] hover:underline font-semibold flex items-center gap-1 mt-1 cursor-pointer"
+          title="로그아웃"
         >
-          역할 선택
+          로그아웃
         </button>
       </div>
 

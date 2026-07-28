@@ -17,12 +17,17 @@ import { DocumentsView } from './views/DocumentsView';
 import { NotificationsView } from './views/NotificationsView';
 import { TenantRegisterView } from './views/TenantRegisterView';
 import { LandlordRegisterView } from './views/LandlordRegisterView';
+import { AuthView } from './views/AuthView';
 
 const MainContent: React.FC = () => {
   const { role, activeTab } = useApp();
 
   if (role === 'SELECTION' || activeTab === 'selection') {
     return <RoleSelectionView />;
+  }
+
+  if (activeTab === 'auth') {
+    return <AuthView />;
   }
 
   const renderView = () => {
