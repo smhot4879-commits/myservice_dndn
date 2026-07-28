@@ -1,0 +1,6 @@
+{
+  "name": "든든집사 - 임대인/임차인 투명 수리 및 임대차 관리",
+  "description": "임대인과 임차인 간의 집 수리 갈등을 예방하고 비교 견적, 3자 채팅, 단계별 승인 및 법률 가이드를 제공하는 수리 관리 플랫폼",
+  "requestFramePermissions": ["camera"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,153 @@
+{
+  "entities": {
+    "users": {
+      "title": "users",
+      "description": "User profiles and roles",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "name", "role"]
+    },
+    "propertyUnits": {
+      "title": "propertyUnits",
+      "description": "Property unit details and tenant assignments",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "buildingName": { "type": "string" },
+        "unitNumber": { "type": "string" },
+        "tenantName": { "type": "string" },
+        "tenantPhone": { "type": "string" },
+        "contractStart": { "type": "string" },
+        "contractEnd": { "type": "string" },
+        "deposit": { "type": "number" },
+        "monthlyRent": { "type": "number" },
+        "maintenanceFee": { "type": "number" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "buildingName", "unitNumber", "tenantName"]
+    },
+    "repairCases": {
+      "title": "repairCases",
+      "description": "Repair requests, symptoms, estimates, and invited vendors",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "unit": { "type": "string" },
+        "tenantName": { "type": "string" },
+        "category": { "type": "string" },
+        "title": { "type": "string" },
+        "symptom": { "type": "string text" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "updatedAt": { "type": "string" },
+        "photos": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "estimates": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "vendorName": { "type": "string" },
+              "amount": { "type": "number" },
+              "repairScope": { "type": "string" },
+              "warrantyPeriod": { "type": "string font" },
+              "estimatedDuration": { "type": "string" },
+              "isApproved": { "type": "boolean" }
+            }
+          }
+        },
+        "invitedVendors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": { "type": "string" },
+              "vendorName": { "type": "string" },
+              "phone": { "type": "string" },
+              "memo": { "type": "string" },
+              "invitedAt": { "type": "string" },
+              "inviteCode": { "type": "string" },
+              "status": { "type": "string" }
+            }
+          }
+        },
+        "moveInRecord": {
+          "type": "object",
+          "properties": {
+            "photoUrl": { "type": "string" },
+            "note": { "type": "string" },
+            "recordedAt": { "type": "string" }
+          }
+        },
+        "completionReport": {
+          "type": "object",
+          "properties": {
+            "completedAt": { "type": "string" },
+            "beforePhoto": { "type": "string" },
+            "afterPhoto": { "type": "string" },
+            "beforeNote": { "type": "string" },
+            "afterNote": { "type": "string" },
+            "vendorName": { "type": "string" },
+            "finalAmount": { "type": "number" },
+            "specialNotes": { "type": "string" }
+          }
+        }
+      },
+      "required": ["id", "unit", "tenantName", "title", "symptom", "status"]
+    },
+    "chatMessages": {
+      "title": "chatMessages",
+      "description": "3-way chat messages among landlord, tenant, and repair vendor",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "repairCaseId": { "type": "string" },
+        "sender": { "type": "string" },
+        "senderName": { "type": "string" },
+        "message": { "type": "string text" },
+        "timestamp": { "type": "string" },
+        "type": { "type": "string" },
+        "attachmentUrl": { "type": "string" }
+      },
+      "required": ["id", "repairCaseId", "sender", "senderName", "message", "timestamp"]
+    },
+    "notifications": {
+      "title": "notifications",
+      "description": "User activity notifications and repair alerts",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "isRead": { "type": "boolean" },
+        "caseId": { "type": "string" }
+      },
+      "required": ["id", "type", "title", "message", "timestamp", "isRead"]
+    },
+    "realtorInquiries": {
+      "title": "realtorInquiries",
+      "description": "1:1 direct inquiries submitted to licensed real estate brokers",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "inquiryType": { "type": "string" },
+        "contactPhone": { "type": "string" },
+        "inquiryContent": { "type": "string text" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["id", "inquiryType", "contactPhone", "inquiryContent"]
+    }
+  }
+}
