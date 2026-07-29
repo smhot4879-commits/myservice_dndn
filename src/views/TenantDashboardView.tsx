@@ -13,6 +13,7 @@ import {
   Receipt,
   ArrowRight,
   Sparkles,
+  ShieldCheck,
 } from 'lucide-react';
 
 export const TenantDashboardView: React.FC = () => {
@@ -25,7 +26,7 @@ export const TenantDashboardView: React.FC = () => {
       {/* Welcome & High Priority Call to Action Header */}
       <section className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 pt-1 sm:pt-2">
         <div>
-          <h2 className="text-xl sm:text-3xl font-extrabold text-[#1b1c1c] tracking-tight">
+          <h2 className="text-[21px] sm:text-3xl font-extrabold text-[#1b1c1c] tracking-tight">
             안녕하세요, 김지우 님! 👋
           </h2>
           <p className="text-xs sm:text-base text-[#424655] mt-0.5 sm:mt-1">
@@ -38,7 +39,7 @@ export const TenantDashboardView: React.FC = () => {
           className="w-full sm:w-auto bg-[#0054cc] hover:bg-[#066bfd] text-white px-5 py-3 rounded-xl sm:rounded-2xl font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>임대인에게 수리 요청하기</span>
+          <span className="pl-[68px]">임대인에게 수리 요청하기</span>
         </button>
       </section>
 
@@ -254,7 +255,7 @@ export const TenantDashboardView: React.FC = () => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold text-[#1b1c1c] flex items-center gap-2">
                 <FileText className="w-5 h-5 text-[#0054cc]" />
-                <span>현재 임대차 계약</span>
+                <span className="text-[13px]">현재 임대차 계약</span>
               </h3>
               <span className="text-xs font-bold text-[#10B981] bg-[#10B981]/10 px-2.5 py-1 rounded-full">
                 계약 유지 중
@@ -286,41 +287,35 @@ export const TenantDashboardView: React.FC = () => {
             className="mt-6 w-full py-3 bg-[#f0eded] hover:bg-[#e5e2e1] text-[#1b1c1c] font-bold text-sm rounded-xl transition-all cursor-pointer flex items-center justify-center gap-2"
           >
             <FileText className="w-4 h-4 text-[#0054cc]" />
-            <span>전자계약서 및 특약 원본 확인</span>
+            <span className="text-[9px]">전자계약서 및 특약 원본 확인</span>
           </button>
         </div>
 
-        {/* Notifications & Announcements */}
+        {/* Tenant Legal & Rights Guide Card */}
         <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xs border border-[#c2c6d8]/30 flex flex-col justify-between">
           <div>
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold text-[#1b1c1c] flex items-center gap-2">
-                <Bell className="w-5 h-5 text-[#0054cc]" />
-                <span>최근 알림</span>
+                <HelpCircle className="w-5 h-5 text-[#0054cc]" />
+                <span>임차인 법률 & 권리 가이드</span>
               </h3>
-              <button
-                onClick={() => setActiveTab('notifications')}
-                className="text-xs text-[#0054cc] font-bold hover:underline cursor-pointer"
-              >
-                전체보기
-              </button>
+              <span className="text-xs font-bold text-[#0054cc] bg-[#0054cc]/10 px-2.5 py-1 rounded-full">
+                안전한 임대차
+              </span>
             </div>
 
-            <div className="space-y-3">
-              {notifications.slice(0, 3).map((n) => (
-                <div
-                  key={n.id}
-                  onClick={() => setActiveTab('notifications')}
-                  className="p-3.5 rounded-2xl bg-[#fcf9f8] border border-[#c2c6d8]/30 hover:border-[#0054cc] transition-all cursor-pointer flex items-start gap-3"
-                >
-                  <div className="w-2 h-2 rounded-full bg-[#0054cc] mt-1.5 shrink-0" />
-                  <div className="flex-1">
-                    <h4 className="font-bold text-xs text-[#1b1c1c]">{n.title}</h4>
-                    <p className="text-[11px] text-[#424655] line-clamp-1 mt-0.5">{n.message}</p>
-                  </div>
-                  <span className="text-[10px] text-[#727787]">{n.timestamp}</span>
-                </div>
-              ))}
+            <p className="text-xs text-[#424655] leading-relaxed mb-4">
+              수리 비용 부담 주체(민법 제623조) 및 하자담보책임, 보증금 보호 등 주요 임대차 법률 가이드를 확인해 보세요.
+            </p>
+
+            <div className="bg-[#fcf9f8] p-4 rounded-2xl border border-[#c2c6d8]/30 space-y-2">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#1b1c1c]">
+                <ShieldCheck className="w-4 h-4 text-[#10B981]" />
+                <span>임대인의 하자수리 의무 (민법 제623조)</span>
+              </div>
+              <p className="text-[11px] text-[#727787] leading-relaxed">
+                누수, 보일러 고장, 난방 결함 등 대규모 시설 및 구조적 문제는 임대인(집주인) 부담 수리가 원칙입니다.
+              </p>
             </div>
           </div>
 

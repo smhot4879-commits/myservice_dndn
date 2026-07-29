@@ -21,17 +21,19 @@ export const MobileNav: React.FC = () => {
         <span className="text-[10px] font-semibold mt-0.5">홈</span>
       </button>
 
-      <button
-        onClick={() => setActiveTab(role === 'LANDLORD' ? 'dashboard' : 'repair-request')}
-        className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all cursor-pointer ${
-          activeTab === 'repair-request'
-            ? 'bg-[#066bfd] text-white font-bold'
-            : 'text-[#424655] hover:bg-[#f6f3f2]'
-        }`}
-      >
-        <Wrench className="w-5 h-5" />
-        <span className="text-[10px] font-semibold mt-0.5">{role === 'LANDLORD' ? '수리현황' : '수리요청'}</span>
-      </button>
+      {role !== 'LANDLORD' && (
+        <button
+          onClick={() => setActiveTab('repair-request')}
+          className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl transition-all cursor-pointer ${
+            activeTab === 'repair-request'
+              ? 'bg-[#066bfd] text-white font-bold'
+              : 'text-[#424655] hover:bg-[#f6f3f2]'
+          }`}
+        >
+          <Wrench className="w-5 h-5" />
+          <span className="text-[10px] font-semibold mt-0.5">수리요청</span>
+        </button>
+      )}
 
       <button
         onClick={() => setActiveTab('documents')}
