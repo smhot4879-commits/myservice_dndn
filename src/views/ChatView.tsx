@@ -215,447 +215,240 @@ export const ChatView: React.FC = () => {
   const fullInviteUrl = `https://dundeun-jibsa.app/invite/${currentCase.id}?code=${generatedInviteCode || 'v-8821'}`;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-3 animate-in fade-in duration-300">
       {/* VENDOR Mode Active Banner */}
       {role === 'VENDOR' && (
-        <div className="bg-[#10B981] text-white p-4 rounded-3xl shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3 animate-in slide-in-from-top-2 duration-300">
-          <div className="flex items-center gap-2.5">
-            <div className="p-2 bg-white/20 rounded-2xl">
-              <Building2 className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-sm">수리업체 무로그인 대화 참여 모드</span>
-                <span className="bg-white text-[#10B981] text-[10px] font-black px-2 py-0.5 rounded-full">
-                  회원가입 없음
-                </span>
-              </div>
-              <p className="text-xs text-white/90">
-                초대받은 수리 기사님 시점으로 3자 대화방에서 견적제출 및 일정 상담 중입니다.
-              </p>
-            </div>
+        <div className="bg-[#10B981] text-white p-3 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-white shrink-0" />
+            <span>수리업체 무로그인 대화 참여 모드</span>
           </div>
-
           <button
             onClick={() => setRole('LANDLORD')}
-            className="px-4 py-2 bg-white hover:bg-emerald-50 text-[#065F46] font-bold text-xs rounded-xl shadow-xs transition-all cursor-pointer whitespace-nowrap"
+            className="px-3 py-1 bg-white hover:bg-emerald-50 text-[#065F46] font-bold text-[11px] rounded-lg shadow-2xs transition-all cursor-pointer whitespace-nowrap"
           >
             임대인/임차인 화면으로 전환
           </button>
         </div>
       )}
 
-      {/* Top Header & Stepper Bar */}
-      <div className="bg-white p-5 rounded-3xl shadow-xs border border-[#c2c6d8]/40 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+      {/* Main Clean Chat Window Container */}
+      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-[#c2c6d8]/40 flex flex-col h-[calc(100vh-180px)] min-h-[500px] max-h-[720px] overflow-hidden">
+        {/* Minimalist Stream Header */}
+        <div className="p-3.5 sm:p-4 border-b border-[#c2c6d8]/30 flex justify-between items-center bg-[#fcf9f8] rounded-t-2xl sm:rounded-t-3xl shrink-0">
+          <div className="flex items-center gap-2.5 min-w-0">
             <button
               onClick={() => setActiveTab('dashboard')}
-              className="p-2 hover:bg-[#f0eded] rounded-xl text-[#727787] cursor-pointer"
+              className="p-1.5 hover:bg-[#f0eded] rounded-xl text-[#727787] cursor-pointer shrink-0"
+              title="대시보드로 돌아가기"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="font-extrabold text-lg text-[#1b1c1c]">{currentCase.title}</span>
-                <span className="bg-[#0054cc]/10 text-[#0054cc] font-bold text-xs px-2.5 py-0.5 rounded-full">
+            <div className="min-w-0">
+              <div className="flex items-center gap-2 truncate">
+                <span className="font-extrabold text-sm sm:text-base text-[#1b1c1c] truncate">
+                  {currentCase.title}
+                </span>
+                <span className="bg-[#0054cc]/10 text-[#0054cc] font-bold text-[11px] px-2 py-0.5 rounded-full shrink-0">
                   {currentCase.unit}
                 </span>
               </div>
-              <p className="text-xs text-[#424655] mt-0.5">
-                임차인: {currentCase.tenantName} | 카테고리: {currentCase.category}
+              <p className="text-[11px] text-[#727787] truncate">
+                {currentCase.tenantName} | {currentCase.category}
               </p>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap">
-            {/* Invite Vendor Action Button */}
+          {/* Header Actions */}
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => {
                 setGeneratedInviteCode(null);
                 setShowInviteModal(true);
               }}
-              className="px-3.5 py-2 bg-[#0054cc]/10 hover:bg-[#0054cc]/20 text-[#0054cc] font-extrabold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-all border border-[#0054cc]/20 shadow-2xs"
+              className="px-2.5 py-1.5 bg-[#0054cc]/10 hover:bg-[#0054cc]/20 text-[#0054cc] font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer transition-all"
+              title="수리업체 초대"
             >
-              <UserPlus className="w-4 h-4 text-[#0054cc]" />
-              <span>수리업체 초대하기</span>
+              <UserPlus className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">업체 초대</span>
             </button>
-
             <button
               onClick={() => setActiveTab('estimates')}
-              className="px-3.5 py-2 bg-[#f0eded] hover:bg-[#e5e2e1] text-[#1b1c1c] font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer"
+              className="px-2.5 py-1.5 bg-[#f0eded] hover:bg-[#e5e2e1] text-[#1b1c1c] font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer"
+              title="견적서 확인"
             >
-              <Receipt className="w-4 h-4 text-[#0054cc]" />
-              <span>비교 견적서 ({currentCase.estimates.length})</span>
+              <Receipt className="w-3.5 h-3.5 text-[#0054cc]" />
+              <span className="hidden sm:inline">견적 ({currentCase.estimates.length})</span>
             </button>
-
-            {currentCase.status === 'COMPLETED' ? (
-              <button
-                onClick={() => setActiveTab('completion')}
-                className="px-3.5 py-2 bg-[#10B981] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs"
-              >
-                <FileCheck className="w-4 h-4" />
-                <span>수리 보고서 보기</span>
-              </button>
-            ) : (
-              <button
-                onClick={handleCompleteRepairReport}
-                className="px-3.5 py-2 bg-[#0054cc] text-white font-bold text-xs rounded-xl hover:bg-[#066bfd] flex items-center gap-1.5 cursor-pointer shadow-xs"
-              >
-                <CheckCircle2 className="w-4 h-4" />
-                <span>수리 완료 처리</span>
-              </button>
-            )}
           </div>
         </div>
 
-        {/* Status Stepper & Participants Badge */}
-        <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-2 px-4 py-2.5 bg-[#fcf9f8] rounded-2xl border border-[#c2c6d8]/30">
-          <div className="flex items-center gap-2 text-xs font-bold text-[#1b1c1c]">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#0054cc] animate-pulse" />
-            <span>현재 상태: {currentCase.status === 'QUOTE_UPLOADED' ? '비교 견적 검토 단계' : currentCase.status}</span>
-          </div>
-
-          <div className="flex items-center gap-2 text-[11px] text-[#424655]">
-            <span className="font-bold text-[#0054cc]">대화 참여자:</span>
-            <span>임대인(김지수), 임차인({currentCase.tenantName})</span>
-            {currentCase.invitedVendors && currentCase.invitedVendors.length > 0 ? (
-              <span className="inline-flex items-center gap-1 bg-[#10B981]/10 text-[#065F46] font-extrabold px-2 py-0.5 rounded-md border border-[#10B981]/20">
-                <UserCheck className="w-3 h-3" />
-                <span>수리업체: {currentCase.invitedVendors[0].vendorName}</span>
-              </span>
-            ) : (
-              <button
-                onClick={() => {
-                  setGeneratedInviteCode(null);
-                  setShowInviteModal(true);
-                }}
-                className="text-[#0054cc] hover:underline font-bold cursor-pointer"
-              >
-                + 수리업체 초대
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Main Grid: Chat Stream (Left 8 cols) & Case Summary Sidebar (Right 4 cols) */}
-      <div className="grid grid-cols-12 gap-6">
-        {/* Chat Messages Stream */}
-        <div className="col-span-12 lg:col-span-8 bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-[#c2c6d8]/40 flex flex-col h-[520px] sm:h-[620px] overflow-hidden">
-          {/* Stream Header */}
-          <div className="p-3.5 sm:p-4 border-b border-[#c2c6d8]/30 flex justify-between items-center bg-[#fcf9f8] rounded-t-2xl sm:rounded-t-3xl shrink-0">
-            <div className="flex items-center gap-2">
-              <ShieldCheck className="w-5 h-5 text-[#0054cc]" />
-              <span className="font-bold text-xs text-[#1b1c1c]">법적 근거 보관 3자 실시간 대화방</span>
-            </div>
-            <span className="text-[10px] sm:text-[11px] text-[#727787]">메시지는 실시간 서명 기록됩니다</span>
-          </div>
-
-          {/* Messages Scroll Area */}
-          <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-4">
-            {/* Embedded Move In Record Card */}
-            {currentCase.moveInRecord && (
-              <div className="bg-[#dae2ff]/30 p-4 rounded-2xl border border-[#0054cc]/20 space-y-2 max-w-lg mx-auto">
-                <div className="flex items-center justify-between text-xs font-bold text-[#001847]">
-                  <span className="flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[#0054cc]" />
-                    <span>입주 시 상태 기록 (증빙 근거 자료)</span>
-                  </span>
-                  <span className="text-[10px] text-[#727787]">{currentCase.moveInRecord.recordedAt}</span>
-                </div>
-                <p className="text-xs text-[#424655] leading-relaxed">{currentCase.moveInRecord.note}</p>
-                <img
-                  src={currentCase.moveInRecord.photoUrl}
-                  alt="Move In Evidence"
-                  className="w-full h-40 object-cover rounded-xl border border-[#c2c6d8]"
-                />
+        {/* Messages Scroll Area */}
+        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3.5 sm:p-5 space-y-3.5 bg-[#faf9f8]">
+          {/* Embedded Move In Record Card if exists */}
+          {currentCase.moveInRecord && (
+            <div className="bg-[#dae2ff]/30 p-3.5 rounded-2xl border border-[#0054cc]/20 space-y-2 max-w-md mx-auto">
+              <div className="flex items-center justify-between text-xs font-bold text-[#001847]">
+                <span className="flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-[#0054cc]" />
+                  <span>입주 시 상태 기록</span>
+                </span>
+                <span className="text-[10px] text-[#727787]">{currentCase.moveInRecord.recordedAt}</span>
               </div>
-            )}
+              <p className="text-xs text-[#424655] leading-relaxed">{currentCase.moveInRecord.note}</p>
+              <img
+                src={currentCase.moveInRecord.photoUrl}
+                alt="Move In Evidence"
+                className="w-full h-36 object-cover rounded-xl border border-[#c2c6d8]"
+              />
+            </div>
+          )}
 
-            {/* Chat Bubbles Loop */}
-            {caseMessages.map((msg) => {
-              const isMe =
-                (role === 'LANDLORD' && msg.sender === 'LANDLORD') ||
-                (role === 'TENANT' && msg.sender === 'TENANT') ||
-                (role === 'VENDOR' && msg.sender === 'TECHNICIAN');
-              const isSystem = msg.sender === 'SYSTEM';
-              const isTechnician = msg.sender === 'TECHNICIAN';
+          {/* Chat Bubbles Loop */}
+          {caseMessages.map((msg) => {
+            const isMe =
+              (role === 'LANDLORD' && msg.sender === 'LANDLORD') ||
+              (role === 'TENANT' && msg.sender === 'TENANT') ||
+              (role === 'VENDOR' && msg.sender === 'TECHNICIAN');
+            const isSystem = msg.sender === 'SYSTEM';
+            const isTechnician = msg.sender === 'TECHNICIAN';
 
-              if (isSystem) {
-                return (
-                  <div key={msg.id} className="flex justify-center my-3">
-                    <div className="bg-[#f0eded] text-[#424655] text-xs font-semibold px-4 py-1.5 rounded-2xl border border-[#c2c6d8]/40 shadow-2xs text-center max-w-md">
-                      {msg.message}
-                    </div>
-                  </div>
-                );
-              }
-
+            if (isSystem) {
               return (
-                <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                  <div className="flex items-center gap-1.5 mb-1 px-1">
-                    <span className="text-[10px] font-bold text-[#727787]">{msg.senderName}</span>
-                    {isTechnician && (
-                      <span className="bg-[#10B981]/15 text-[#065F46] text-[9px] font-extrabold px-1.5 py-0.2 rounded-md">
-                        수리기사/업체
-                      </span>
-                    )}
+                <div key={msg.id} className="flex justify-center my-2">
+                  <div className="bg-[#f0eded] text-[#424655] text-xs font-semibold px-3.5 py-1 rounded-2xl border border-[#c2c6d8]/40 shadow-2xs text-center max-w-md">
+                    {msg.message}
                   </div>
-
-                  <div
-                    className={`max-w-[80%] sm:max-w-[70%] p-3.5 rounded-2xl text-sm leading-relaxed shadow-2xs ${
-                      isMe
-                        ? 'bg-[#0054cc] text-white rounded-tr-none'
-                        : isTechnician
-                        ? 'bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/30 rounded-tl-none font-medium'
-                        : 'bg-[#f0eded] text-[#1b1c1c] rounded-tl-none border border-[#c2c6d8]/30'
-                    }`}
-                  >
-                    <p>{msg.message}</p>
-
-                    {msg.attachmentUrl && (
-                      <img
-                        src={msg.attachmentUrl}
-                        alt="Attachment"
-                        className="mt-2.5 rounded-xl border border-white/20 max-h-48 w-full object-cover"
-                      />
-                    )}
-                  </div>
-                  <span className="text-[10px] text-[#727787] mt-1 px-1">{msg.timestamp}</span>
                 </div>
               );
-            })}
-          </div>
+            }
 
-          {/* Quick Hashtag Chips */}
-          <div className="px-3 sm:px-4 py-2 border-t border-[#c2c6d8]/30 bg-[#fcf9f8] flex items-center gap-2 overflow-x-auto shrink-0">
-            <span className="text-[11px] font-bold text-[#727787] whitespace-nowrap">빠른 입력:</span>
-
-            {role === 'VENDOR' ? (
-              <>
-                <button
-                  onClick={() => handleQuickHashtag('VENDOR_QUOTE')}
-                  className="px-2.5 py-1 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-xs font-extrabold whitespace-nowrap cursor-pointer"
-                >
-                  #견적서_제출
-                </button>
-                <button
-                  onClick={() => handleQuickHashtag('VENDOR_VISIT')}
-                  className="px-2.5 py-1 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-xs font-extrabold whitespace-nowrap cursor-pointer"
-                >
-                  #방문일정_제안
-                </button>
-                <button
-                  onClick={() => handleQuickHashtag('VENDOR_DONE')}
-                  className="px-2.5 py-1 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-xs font-extrabold whitespace-nowrap cursor-pointer"
-                >
-                  #수리완료_보고
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={() => handleQuickHashtag('MOVE_IN')}
-                  className="px-2.5 py-1 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer"
-                >
-                  #입주상태_기록
-                </button>
-                <button
-                  onClick={() => handleQuickHashtag('VISIT')}
-                  className="px-2.5 py-1 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer"
-                >
-                  #방문요청
-                </button>
-                <button
-                  onClick={() => handleQuickHashtag('PAYMENT')}
-                  className="px-2.5 py-1 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-xs font-semibold whitespace-nowrap cursor-pointer"
-                >
-                  #입금확인
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* Input Box Bar */}
-          <form onSubmit={handleSend} className="p-2.5 sm:p-3 border-t border-[#c2c6d8]/40 flex items-center gap-2 bg-white rounded-b-2xl sm:rounded-b-3xl shrink-0">
-            {/* Photo Upload Button */}
-            <button
-              type="button"
-              onClick={() => {
-                const sampleImg = 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=600&q=80';
-                sendChatMessage(
-                  currentCase.id,
-                  role === 'LANDLORD' ? 'LANDLORD' : role === 'VENDOR' ? 'TECHNICIAN' : 'TENANT',
-                  role === 'LANDLORD' ? '임대인 김지수' : role === 'VENDOR' ? '수리업체 (성진에어컨)' : '김지우 님',
-                  '현장 관련 사진을 추가 공유합니다.',
-                  'TEXT',
-                  sampleImg
-                );
-              }}
-              className="p-2.5 text-[#727787] hover:text-[#0054cc] hover:bg-[#f0eded] rounded-xl transition-colors cursor-pointer shrink-0"
-              title="사진 첨부"
-            >
-              <ImageIcon className="w-5 h-5" />
-            </button>
-
-            {/* Invite Vendor Button in Input Bar */}
-            <button
-              type="button"
-              onClick={() => {
-                setGeneratedInviteCode(null);
-                setShowInviteModal(true);
-              }}
-              className="px-3 py-2 bg-[#0054cc]/10 hover:bg-[#0054cc]/20 text-[#0054cc] font-extrabold text-xs rounded-xl flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0"
-              title="수리업체 무로그인 대화방 초대"
-            >
-              <UserPlus className="w-4 h-4 text-[#0054cc]" />
-              <span className="hidden sm:inline">수리업체 초대</span>
-            </button>
-
-            <input
-              type="text"
-              value={inputMsg}
-              onChange={(e) => setInputMsg(e.target.value)}
-              onFocus={handleInputFocus}
-              placeholder={
-                role === 'VENDOR'
-                  ? '수리 기사 메시지를 입력하세요 (견적, 일정 등)...'
-                  : '투명 수리 협의 메시지를 입력하세요...'
-              }
-              className="flex-1 py-2.5 px-3.5 sm:px-4 bg-[#f6f3f2] focus:bg-white border border-transparent focus:border-[#0054cc] rounded-2xl outline-none text-xs sm:text-sm transition-all"
-            />
-
-            <button
-              type="submit"
-              className="p-3 bg-[#0054cc] hover:bg-[#066bfd] text-white rounded-2xl shadow-md active:scale-95 transition-all cursor-pointer shrink-0"
-            >
-              <Send className="w-4 h-4" />
-            </button>
-          </form>
-        </div>
-
-        {/* Right Floating Summary Sidebar */}
-        <div className="col-span-12 lg:col-span-4 space-y-4">
-          {/* Invited Vendor Status Card */}
-          <div className="bg-white p-5 rounded-3xl shadow-xs border border-[#0054cc]/30 space-y-3">
-            <div className="flex items-center justify-between pb-2 border-b border-[#c2c6d8]/30">
-              <h4 className="font-extrabold text-xs text-[#0054cc] flex items-center gap-1.5">
-                <Building2 className="w-4 h-4 text-[#0054cc]" />
-                <span>수리업체 3자 참여 현황</span>
-              </h4>
-              <button
-                onClick={() => {
-                  setGeneratedInviteCode(null);
-                  setShowInviteModal(true);
-                }}
-                className="text-[10px] bg-[#0054cc] text-white font-bold px-2 py-1 rounded-lg hover:bg-[#066bfd] transition-all cursor-pointer"
-              >
-                + 업체 초대
-              </button>
-            </div>
-
-            {currentCase.invitedVendors && currentCase.invitedVendors.length > 0 ? (
-              <div className="space-y-2">
-                {currentCase.invitedVendors.map((v) => (
-                  <div key={v.id} className="p-3 bg-[#EFF2F8] rounded-2xl border border-[#0054cc]/20 space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="font-extrabold text-xs text-[#1b1c1c]">{v.vendorName}</span>
-                      <span className="bg-[#10B981]/15 text-[#065F46] text-[10px] font-extrabold px-2 py-0.5 rounded-full flex items-center gap-1">
-                        <UserCheck className="w-3 h-3" />
-                        초대 완료
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-[#424655] flex items-center gap-1">
-                      <Phone className="w-3 h-3 text-[#0054cc]" />
-                      {v.phone}
-                    </p>
-                    <div className="pt-1.5 flex justify-end">
-                      <button
-                        onClick={() => joinAsVendor(currentCase.id, v.vendorName)}
-                        className="text-[10px] text-[#0054cc] hover:underline font-extrabold flex items-center gap-1 cursor-pointer"
-                      >
-                        <span>[시뮬레이션] 수리업체 시점 대화 참여</span>
-                        <ExternalLink className="w-3 h-3" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div
-                onClick={() => {
-                  setGeneratedInviteCode(null);
-                  setShowInviteModal(true);
-                }}
-                className="p-4 rounded-2xl border-2 border-dashed border-[#c2c6d8] hover:border-[#0054cc] bg-[#fcf9f8] hover:bg-white text-center cursor-pointer transition-all space-y-1"
-              >
-                <UserPlus className="w-5 h-5 text-[#0054cc] mx-auto" />
-                <p className="text-xs font-extrabold text-[#1b1c1c]">수리업체 초대하기</p>
-                <p className="text-[10px] text-[#727787]">
-                  회원가입 없이 링크로 3자 대화방 입장
-                </p>
-              </div>
-            )}
-          </div>
-
-          <div className="bg-white p-6 rounded-3xl shadow-xs border border-[#c2c6d8]/40 space-y-4">
-            <h3 className="font-extrabold text-base text-[#1b1c1c] pb-3 border-b border-[#c2c6d8]/30 flex items-center gap-2">
-              <Wrench className="w-5 h-5 text-[#0054cc]" />
-              <span>수리 및 기록 요약</span>
-            </h3>
-
-            <div className="space-y-3 text-xs">
-              <div className="flex justify-between">
-                <span className="text-[#424655]">호실 / 세대:</span>
-                <span className="font-bold text-[#1b1c1c]">{currentCase.unit}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#424655]">임차인 성명:</span>
-                <span className="font-bold text-[#1b1c1c]">{currentCase.tenantName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#424655]">수리 분류:</span>
-                <span className="font-bold text-[#0054cc]">{currentCase.category}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-[#424655]">접수 일시:</span>
-                <span className="font-bold text-[#1b1c1c]">{currentCase.createdAt}</span>
-              </div>
-            </div>
-
-            {/* Approved Estimate box */}
-            <div className="bg-[#f6f3f2] p-4 rounded-2xl space-y-2 border border-[#c2c6d8]/30">
-              <span className="text-[11px] font-bold text-[#0054cc]">등록된 비교 견적 ({currentCase.estimates.length}건)</span>
-              {currentCase.estimates[0] && (
-                <div>
-                  <p className="font-bold text-sm text-[#1b1c1c]">{currentCase.estimates[0].vendorName}</p>
-                  <p className="text-base font-black text-[#0054cc]">
-                    ₩{currentCase.estimates[0].amount.toLocaleString()}원
-                  </p>
+            return (
+              <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
+                <div className="flex items-center gap-1.5 mb-0.5 px-1">
+                  <span className="text-[10px] font-bold text-[#727787]">{msg.senderName}</span>
+                  {isTechnician && (
+                    <span className="bg-[#10B981]/15 text-[#065F46] text-[9px] font-extrabold px-1.5 py-0.2 rounded-md">
+                      수리기사/업체
+                    </span>
+                  )}
                 </div>
-              )}
-            </div>
 
-            <button
-              onClick={() => setActiveTab('estimates')}
-              className="w-full py-3 bg-[#0054cc] text-white font-bold text-xs rounded-xl hover:bg-[#066bfd] transition-all shadow-md cursor-pointer flex items-center justify-center gap-1.5"
-            >
-              <Receipt className="w-4 h-4" />
-              <span>전체 비교 견적서 확인하기</span>
-            </button>
-          </div>
+                <div
+                  className={`max-w-[85%] sm:max-w-[75%] p-3 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-2xs ${
+                    isMe
+                      ? 'bg-[#0054cc] text-white rounded-tr-none'
+                      : isTechnician
+                      ? 'bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/30 rounded-tl-none font-medium'
+                      : 'bg-white text-[#1b1c1c] rounded-tl-none border border-[#c2c6d8]/40'
+                  }`}
+                >
+                  <p>{msg.message}</p>
 
-          <div className="bg-[#fcf9f8] p-5 rounded-3xl border border-dashed border-[#c2c6d8] space-y-2">
-            <p className="text-xs font-bold text-[#1b1c1c] flex items-center gap-1.5">
-              <AlertCircle className="w-4 h-4 text-[#7a24df]" />
-              <span>법률 효력 안내</span>
-            </p>
-            <p className="text-[11px] text-[#424655] leading-relaxed">
-              본 대화방에서 오간 합의 내용 및 사진 자료는 주택임대차 분쟁 조정 위원회 제출 시 합의 이력 서류로 활용됩니다.
-            </p>
-          </div>
+                  {msg.attachmentUrl && (
+                    <img
+                      src={msg.attachmentUrl}
+                      alt="Attachment"
+                      className="mt-2 rounded-xl border border-white/20 max-h-48 w-full object-cover"
+                    />
+                  )}
+                </div>
+                <span className="text-[9px] sm:text-[10px] text-[#727787] mt-0.5 px-1">{msg.timestamp}</span>
+              </div>
+            );
+          })}
         </div>
+
+        {/* Quick Hashtag Chips */}
+        <div className="px-3 py-1.5 border-t border-[#c2c6d8]/30 bg-[#fcf9f8] flex items-center gap-1.5 overflow-x-auto shrink-0">
+          <span className="text-[10px] font-bold text-[#727787] whitespace-nowrap">빠른 입력:</span>
+
+          {role === 'VENDOR' ? (
+            <>
+              <button
+                onClick={() => handleQuickHashtag('VENDOR_QUOTE')}
+                className="px-2.5 py-0.5 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-[11px] font-extrabold whitespace-nowrap cursor-pointer"
+              >
+                #견적서_제출
+              </button>
+              <button
+                onClick={() => handleQuickHashtag('VENDOR_VISIT')}
+                className="px-2.5 py-0.5 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-[11px] font-extrabold whitespace-nowrap cursor-pointer"
+              >
+                #방문일정_제안
+              </button>
+              <button
+                onClick={() => handleQuickHashtag('VENDOR_DONE')}
+                className="px-2.5 py-0.5 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-[11px] font-extrabold whitespace-nowrap cursor-pointer"
+              >
+                #수리완료_보고
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                onClick={() => handleQuickHashtag('MOVE_IN')}
+                className="px-2.5 py-0.5 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-[11px] font-semibold whitespace-nowrap cursor-pointer"
+              >
+                #입주상태_기록
+              </button>
+              <button
+                onClick={() => handleQuickHashtag('VISIT')}
+                className="px-2.5 py-0.5 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-[11px] font-semibold whitespace-nowrap cursor-pointer"
+              >
+                #방문요청
+              </button>
+              <button
+                onClick={() => handleQuickHashtag('PAYMENT')}
+                className="px-2.5 py-0.5 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-[11px] font-semibold whitespace-nowrap cursor-pointer"
+              >
+                #입금확인
+              </button>
+            </>
+          )}
+        </div>
+
+        {/* Input Box Bar */}
+        <form onSubmit={handleSend} className="p-2 sm:p-3 border-t border-[#c2c6d8]/40 flex items-center gap-2 bg-white rounded-b-2xl sm:rounded-b-3xl shrink-0">
+          <button
+            type="button"
+            onClick={() => {
+              const sampleImg = 'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=600&q=80';
+              sendChatMessage(
+                currentCase.id,
+                role === 'LANDLORD' ? 'LANDLORD' : role === 'VENDOR' ? 'TECHNICIAN' : 'TENANT',
+                role === 'LANDLORD' ? '임대인 김지수' : role === 'VENDOR' ? '수리업체 (성진에어컨)' : '김지우 님',
+                '현장 관련 사진을 추가 공유합니다.',
+                'TEXT',
+                sampleImg
+              );
+            }}
+            className="p-2 text-[#727787] hover:text-[#0054cc] hover:bg-[#f0eded] rounded-xl transition-colors cursor-pointer shrink-0"
+            title="사진 첨부"
+          >
+            <ImageIcon className="w-5 h-5" />
+          </button>
+
+          <input
+            type="text"
+            value={inputMsg}
+            onChange={(e) => setInputMsg(e.target.value)}
+            onFocus={handleInputFocus}
+            placeholder={
+              role === 'VENDOR'
+                ? '수리 기사 메시지를 입력하세요 (견적, 일정 등)...'
+                : '대화 메시지를 입력하세요...'
+            }
+            className="flex-1 py-2 px-3 sm:px-4 bg-[#f6f3f2] focus:bg-white border border-transparent focus:border-[#0054cc] rounded-xl outline-none text-xs sm:text-sm transition-all"
+          />
+
+          <button
+            type="submit"
+            className="p-2.5 bg-[#0054cc] hover:bg-[#066bfd] text-white rounded-xl shadow-md active:scale-95 transition-all cursor-pointer shrink-0"
+          >
+            <Send className="w-4 h-4" />
+          </button>
+        </form>
       </div>
 
       {/* Vendor Invitation Modal (수리업체 초대 모달) */}

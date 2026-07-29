@@ -234,16 +234,16 @@ export const RepairRequestView: React.FC = () => {
         className="hidden"
       />
 
-      <div className="flex items-center justify-between border-b border-[#c2c6d8]/40 pb-4">
+      <div className="flex items-center justify-between gap-1 sm:gap-4 border-b border-[#c2c6d8]/40 pb-3 sm:pb-4">
         <button
           onClick={() => setActiveTab('dashboard')}
-          className="flex items-center gap-1.5 text-[#424655] hover:text-[#0054cc] font-bold text-sm cursor-pointer"
+          className="flex items-center gap-1 text-[#424655] hover:text-[#0054cc] font-bold text-xs sm:text-sm cursor-pointer whitespace-nowrap shrink-0"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           <span>대시보드로 돌아가기</span>
         </button>
-        <h2 className="text-xl font-extrabold text-[#1b1c1c]">수리 요청서 작성</h2>
-        <span className="text-xs text-[#0054cc] font-bold bg-[#0054cc]/10 px-3 py-1 rounded-full">
+        <h2 className="text-xs sm:text-xl font-extrabold text-[#1b1c1c] whitespace-nowrap text-center">수리 요청서 작성</h2>
+        <span className="text-[9px] sm:text-xs text-[#0054cc] font-bold bg-[#0054cc]/10 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full whitespace-nowrap shrink-0">
           양식에 맞춘 안전 접수
         </span>
       </div>
