@@ -33,8 +33,9 @@ export const LandlordDashboardView: React.FC = () => {
   const [newAddress, setNewAddress] = useState('');
   const [newTenant, setNewTenant] = useState('');
 
-  // Get current active case or default to newest case
-  const activeCase = repairCases.find((c) => c.id === activeRepairId) || repairCases[0];
+  // Get active cases (excluding completed ones)
+  const activeRepairCases = repairCases.filter((c) => c.status !== 'COMPLETED');
+  const activeCase = activeRepairCases.find((c) => c.id === activeRepairId) || activeRepairCases[0] || repairCases[0];
 
   const handleAddUnitSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -103,11 +104,19 @@ export const LandlordDashboardView: React.FC = () => {
             </div>
 
             <div className="space-y-3.5">
-              {repairCases.map((rc) => {
+              {activeRepairCases.length === 0 ? (
+                <div className="text-center py-8 text-[#727787] text-sm">
+                  현재 조치가 필요한 수리 요청이 없습니다. (모든 수리 처리 완료)
+                </div>
+              ) : (
+                activeRepairCases.map((rc) => {
                 const statusMap: Record<string, { label: string; bg: string; text: string; icon: React.ReactNode }> = {
                   REQUESTED: { label: '요청 완료', bg: 'bg-[#EF4444]/10', text: 'text-[#EF4444]', icon: <Wrench className="w-6 h-6" /> },
+                  CHATTING: { label: '대화 중', bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]', icon: <MessageSquare className="w-6 h-6" /> },
                   QUOTE_UPLOADED: { label: '견적 도착', bg: 'bg-[#F59E0B]/10', text: 'text-[#F59E0B]', icon: <Receipt className="w-6 h-6" /> },
+                  LANDLORD_APPROVED: { label: '임대인 승인', bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]', icon: <CheckCircle2 className="w-6 h-6" /> },
                   APPROVED: { label: '승인 완료', bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]', icon: <CheckCircle2 className="w-6 h-6" /> },
+                  REPAIRING: { label: '수리 진행 중', bg: 'bg-[#8B5CF6]/10', text: 'text-[#8B5CF6]', icon: <Wrench className="w-6 h-6" /> },
                   COMPLETED: { label: '처리 완료', bg: 'bg-[#10B981]/10', text: 'text-[#10B981]', icon: <CheckCircle2 className="w-6 h-6" /> },
                 };
                 const statusInfo = statusMap[rc.status] || {
@@ -147,7 +156,8 @@ export const LandlordDashboardView: React.FC = () => {
                     </div>
                   </div>
                 );
-              })}
+              })
+              )}
             </div>
           </div>
 

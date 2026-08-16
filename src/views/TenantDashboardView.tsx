@@ -19,7 +19,8 @@ import {
 export const TenantDashboardView: React.FC = () => {
   const { setActiveTab, setActiveRepairId, activeRepairId, repairCases, notifications } = useApp();
 
-  const activeCase = repairCases.find((c) => c.id === activeRepairId) || repairCases[0];
+  const activeRepairCases = repairCases.filter((c) => c.status !== 'COMPLETED');
+  const activeCase = activeRepairCases.find((c) => c.id === activeRepairId) || activeRepairCases[0] || repairCases[0];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-300">
@@ -166,7 +167,7 @@ export const TenantDashboardView: React.FC = () => {
         <div className="flex justify-between items-center">
           <h3 className="text-lg font-bold text-[#1b1c1c] flex items-center gap-2">
             <Wrench className="w-5 h-5 text-[#0054cc]" />
-            <span>최근 올린 수리 요청 내역 ({repairCases.length}건)</span>
+            <span>최근 올린 수리 요청 내역 ({activeRepairCases.length}건)</span>
           </h3>
           <button
             onClick={() => setActiveTab('repair-request')}
@@ -178,17 +179,20 @@ export const TenantDashboardView: React.FC = () => {
         </div>
 
         <div className="space-y-3">
-          {repairCases.length === 0 ? (
+          {activeRepairCases.length === 0 ? (
             <div className="text-center py-8 text-[#727787] text-sm">
-              등록된 수리 요청 내역이 없습니다.
+              진행 중인 수리 요청 내역이 없습니다. (모든 수리 처리 완료)
             </div>
           ) : (
-            repairCases.map((rc) => {
+            activeRepairCases.map((rc) => {
               const isSelected = rc.id === activeCase?.id;
               const statusMap: Record<string, { label: string; bg: string; text: string }> = {
                 REQUESTED: { label: '요청 완료', bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]' },
+                CHATTING: { label: '대화 중', bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]' },
                 QUOTE_UPLOADED: { label: '견적 도착', bg: 'bg-[#F59E0B]/10', text: 'text-[#F59E0B]' },
+                LANDLORD_APPROVED: { label: '임대인 승인', bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]' },
                 APPROVED: { label: '승인 완료', bg: 'bg-[#10B981]/10', text: 'text-[#10B981]' },
+                REPAIRING: { label: '수리 진행 중', bg: 'bg-[#8B5CF6]/10', text: 'text-[#8B5CF6]' },
                 COMPLETED: { label: '수리 완료', bg: 'bg-[#6B7280]/10', text: 'text-[#6B7280]' },
               };
               const statusInfo = statusMap[rc.status] || { label: rc.status, bg: 'bg-[#0054cc]/10', text: 'text-[#0054cc]' };
