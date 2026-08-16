@@ -173,17 +173,17 @@ export const LandlordDashboardView: React.FC = () => {
 
               {/* Active Case Card Details */}
               <div className="bg-white/10 backdrop-blur-md rounded-2xl p-5 border border-white/20 mb-6">
-                <div className="flex items-center gap-4 mb-6">
-                  <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center font-bold text-lg">
+                <div className="flex items-center gap-3 sm:gap-4 mb-6">
+                  <div className="w-11 h-11 rounded-full bg-white/20 flex items-center justify-center font-bold text-lg shrink-0">
                     ❄️
                   </div>
-                  <div>
-                    <p className="font-bold text-base">{activeCase?.title || '거실 에어컨 수리'}</p>
-                    <p className="text-xs text-white/80">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-bold text-base truncate">{activeCase?.title || '거실 에어컨 수리'}</p>
+                    <p className="text-xs text-white/80 truncate">
                       견적 업로드 완료 • 임대인 승인 대기 단계 ({activeCase?.unit})
                     </p>
                   </div>
-                  <span className="ml-auto bg-white text-[#0054cc] font-bold text-xs px-3 py-1 rounded-full shadow-sm">
+                  <span className="bg-white text-[#0054cc] font-bold text-xs px-3 py-1 rounded-full shadow-sm whitespace-nowrap shrink-0">
                     진행 중
                   </span>
                 </div>
