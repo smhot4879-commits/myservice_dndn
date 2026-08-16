@@ -12,7 +12,6 @@ import {
   HelpCircle,
   PlayCircle,
   Plus,
-  TrendingDown,
   ArrowRight,
   Sparkles,
 } from 'lucide-react';
@@ -133,26 +132,26 @@ export const LandlordDashboardView: React.FC = () => {
                       setActiveRepairId(rc.id);
                       setActiveTab('chat');
                     }}
-                    className="group flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-2xl border-2 border-[#FFFC00] hover:border-[#0054cc] transition-all bg-[#fcf9f8] hover:shadow-md cursor-pointer"
+                    className="group flex flex-row items-center justify-between p-3.5 sm:p-4 rounded-2xl border border-[#c2c6d8]/30 hover:border-[#0054cc] transition-all bg-[#fcf9f8] hover:shadow-md cursor-pointer gap-3"
                   >
-                    <div className="flex items-center gap-4">
-                      <div className={`w-12 h-12 rounded-xl ${statusInfo.bg} flex items-center justify-center ${statusInfo.text}`}>
-                        {statusInfo.icon}
+                    <div className="flex items-center gap-3.5 min-w-0 flex-1">
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full ${statusInfo.bg} flex items-center justify-center ${statusInfo.text} shrink-0`}>
+                        <div className="scale-105">{statusInfo.icon}</div>
                       </div>
-                      <div>
-                        <h4 className="font-bold text-sm text-[#1b1c1c]">
+                      <div className="min-w-0 flex-1">
+                        <h4 className="font-bold text-sm text-[#1b1c1c] truncate">
                           {rc.unit} 수리 요청 ({rc.title})
                         </h4>
-                        <p className="text-xs text-[#424655]">
-                          {rc.symptom} • #{rc.id} • {rc.createdAt}
+                        <p className="text-xs text-[#424655] truncate mt-0.5">
+                          {rc.symptom} • {rc.createdAt}
                         </p>
                       </div>
                     </div>
-                    <div className="mt-3 sm:mt-0 flex items-center justify-between sm:justify-end gap-3">
-                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${statusInfo.bg} ${statusInfo.text}`}>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <span className={`px-2.5 sm:px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap ${statusInfo.bg} ${statusInfo.text}`}>
                         {statusInfo.label}
                       </span>
-                      <ChevronRight className="w-5 h-5 text-[#727787] group-hover:text-[#0054cc] group-hover:translate-x-0.5 transition-all" />
+                      <ChevronRight className="w-5 h-5 text-[#727787] group-hover:text-[#0054cc] group-hover:translate-x-0.5 transition-all shrink-0" />
                     </div>
                   </div>
                 );
@@ -162,7 +161,7 @@ export const LandlordDashboardView: React.FC = () => {
           </div>
 
           {/* Integrated Repair Status (Tenant & Landlord Interaction) */}
-          <div className="bg-[#066bfd] text-white p-6 sm:p-8 rounded-3xl shadow-xl relative overflow-hidden border-2 border-[#FFFC00]">
+          <div className="bg-[#066bfd] text-white p-6 sm:p-8 rounded-3xl shadow-xl relative overflow-hidden border border-white/20">
             <div className="relative z-10">
               <div className="flex justify-between items-start mb-6">
                 <div>
@@ -332,7 +331,7 @@ export const LandlordDashboardView: React.FC = () => {
         </div>
 
         {/* Bottom Tertiary Priority Grid */}
-        <div className="col-span-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Legal Q&A Card */}
           <div
             onClick={() => setActiveTab('legal')}
@@ -375,16 +374,6 @@ export const LandlordDashboardView: React.FC = () => {
               <span className="text-xs text-[#F59E0B] font-bold">영상 가이드</span>
               <ArrowRight className="w-4 h-4 text-[#727787] group-hover:text-[#F59E0B] group-hover:translate-x-1 transition-all" />
             </div>
-          </div>
-
-          {/* Savings Insight Card */}
-          <div className="bg-[#fcf9f8] p-6 rounded-3xl border border-dashed border-[#c2c6d8] flex flex-col justify-center items-center text-center">
-            <p className="text-xs text-[#424655] mb-1 font-medium">이번 달 수리 비용 절감액</p>
-            <p className="text-2xl font-extrabold text-[#10B981]">₩245,000</p>
-            <p className="text-[11px] text-[#727787] mt-1.5 flex items-center gap-1">
-              <TrendingDown className="w-3.5 h-3.5 text-[#10B981]" />
-              <span>투명 비교 견적을 통해 전월 대비 12% 비용 절감</span>
-            </p>
           </div>
         </div>
       </div>
