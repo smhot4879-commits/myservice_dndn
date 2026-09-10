@@ -144,6 +144,104 @@ export const INITIAL_REPAIR_CASES: RepairCase[] = [
       finalAmount: 450000,
       specialNotes: '시공 후 1년간 하자 보수 보증서 발행 완료. 임차인 최종 검수 서명 수령함.'
     }
+  },
+  {
+    id: 'req-004',
+    unit: '서초 그랑자이 101호',
+    tenantName: '이지아 님',
+    title: '주방 싱크대 수전 누수 및 배수관 악취 점검',
+    category: '누수/수도',
+    symptom: '싱크대 하부 온수 호스 연결부에서 물방울이 맺혀 떨어지고 배수구에서 미세한 냄새가 올라옵니다.',
+    status: 'CHATTING',
+    createdAt: '2026.07.25 16:40',
+    updatedAt: '2026.07.26 09:10',
+    photos: [
+      'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80'
+    ],
+    estimates: [
+      {
+        id: 'est-401',
+        vendorName: '강남 홈케어 설비',
+        amount: 110000,
+        details: '주방 싱크대 고압 호스 교체 및 배수구 트랩 방취 캡 장착',
+        expectedDate: '2026.07.27 11:00',
+        isApproved: false,
+        isRecommended: true
+      }
+    ]
+  },
+  {
+    id: 'req-005',
+    unit: '그린빌 201호',
+    tenantName: '최민수 님',
+    title: '보일러 온수 가동 중단 (에러코드 03)',
+    category: '기타',
+    symptom: '보일러 컨트롤러에 점검 불이 깜빡이며 에러코드 03 표시 후 온수가 나오지 않습니다.',
+    status: 'REQUESTED',
+    createdAt: '2026.07.25 14:15',
+    updatedAt: '2026.07.25 14:15',
+    photos: [
+      'https://images.unsplash.com/photo-1581094288338-2314dddb7ece?auto=format&fit=crop&w=600&q=80'
+    ],
+    estimates: [
+      {
+        id: 'est-501',
+        vendorName: '경동 나비엔 공식 AS',
+        amount: 130000,
+        details: '점화 플러그 및 송풍 모터 회로 기판 부품 교체',
+        expectedDate: '2026.07.28 14:00',
+        isApproved: false
+      }
+    ]
+  },
+  {
+    id: 'req-006',
+    unit: '한남 더힐 504호',
+    tenantName: '정다은 님',
+    title: '현관 디지털 도어락 터치패드 반응 지연',
+    category: '전기/조명',
+    symptom: '현관 스마트 도어락 비밀번호 입력 시 번호판 3, 7번 인식이 간헐적으로 되지 않아 출입에 불편이 있습니다.',
+    status: 'LANDLORD_APPROVED',
+    createdAt: '2026.07.24 18:20',
+    updatedAt: '2026.07.25 11:30',
+    photos: [
+      'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=600&q=80'
+    ],
+    estimates: [
+      {
+        id: 'est-601',
+        vendorName: '직방 게이트맨 총판',
+        amount: 230000,
+        details: '신형 푸시풀 지문인식 도어락 교체 설치',
+        expectedDate: '2026.07.27 16:00',
+        isApproved: true,
+        isRecommended: true
+      }
+    ]
+  },
+  {
+    id: 'req-007',
+    unit: '서초 그랑자이 203호',
+    tenantName: '강호진 님',
+    title: '거실 베란다 이중창 섀시 잠금장치 헐거움',
+    category: '창호/문',
+    symptom: '강풍 불 때 창문 떨림음이 심하고 크레센트 잠금 핸들이 헐거워져 완전히 밀착되지 않습니다.',
+    status: 'REPAIRING',
+    createdAt: '2026.07.23 11:10',
+    updatedAt: '2026.07.25 15:00',
+    photos: [
+      'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80'
+    ],
+    estimates: [
+      {
+        id: 'est-701',
+        vendorName: 'LG 하우시스 샤시케어',
+        amount: 90000,
+        details: '섀시 롤러 높낮이 조절 및 크레센트 핸들 교체',
+        expectedDate: '2026.07.26 14:00',
+        isApproved: true
+      }
+    ]
   }
 ];
 
