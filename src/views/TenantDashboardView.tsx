@@ -1,5 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
+import { formatRelativeTime } from '../lib/dateUtils';
 import {
   Wrench,
   MessageSquare,
@@ -214,7 +215,9 @@ export const TenantDashboardView: React.FC = () => {
                       </span>
                       <span className="text-xs font-bold text-[#0054cc]">#{rc.id}</span>
                       <span className="text-xs text-[#727787]">• {rc.unit}</span>
-                      <span className="text-[11px] text-[#727787]">({rc.createdAt})</span>
+                      <span className="text-[11px] text-[#727787]">
+                        ({rc.createdAt} • <strong className="text-[#0054cc] font-semibold">{formatRelativeTime(rc.createdAt)}</strong>)
+                      </span>
                     </div>
                     <h4 className="font-extrabold text-base text-[#1b1c1c]">{rc.title}</h4>
                     <p className="text-xs text-[#424655] line-clamp-1">{rc.symptom}</p>

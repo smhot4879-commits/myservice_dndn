@@ -79,6 +79,7 @@ export interface NotificationItem {
   title: string;
   message: string;
   timestamp: string;
+  createdAt?: number;
   isRead: boolean;
   caseId?: string;
 }

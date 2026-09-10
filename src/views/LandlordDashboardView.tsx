@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
+import { formatRelativeTime } from '../lib/dateUtils';
 import {
   Building2,
   AlertCircle,
@@ -143,7 +144,7 @@ export const LandlordDashboardView: React.FC = () => {
                           {rc.unit} 수리 요청 ({rc.title})
                         </h4>
                         <p className="text-xs text-[#424655] truncate mt-0.5">
-                          {rc.symptom} • {rc.createdAt}
+                          {rc.symptom} • {rc.createdAt} ({formatRelativeTime(rc.createdAt)})
                         </p>
                       </div>
                     </div>

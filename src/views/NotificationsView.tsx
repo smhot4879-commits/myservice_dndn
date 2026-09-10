@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Bell, CheckCheck, Wrench, MessageSquare, FileText, Scale, ArrowLeft, Trash2 } from 'lucide-react';
+import { formatActionDate, formatActionDateTime, formatRelativeTime } from '../lib/dateUtils';
 
 export const NotificationsView: React.FC = () => {
   const {
@@ -136,9 +137,18 @@ export const NotificationsView: React.FC = () => {
               </div>
 
               <div className="flex-1 space-y-1">
-                <div className="flex justify-between items-center">
-                  <h4 className="text-sm font-bold text-[#1b1c1c]">{n.title}</h4>
-                  <span className="text-[10px] text-[#727787]">{n.timestamp}</span>
+                <div className="flex justify-between items-center gap-2">
+                  <h4 className="text-sm font-bold text-[#1b1c1c] truncate">{n.title}</h4>
+                  <span
+                    className="text-[11px] text-[#727787] shrink-0 whitespace-nowrap flex items-center gap-1.5"
+                    title={formatActionDateTime(n.createdAt)}
+                  >
+                    <span className="text-[#424655] font-medium">{formatActionDate(n.createdAt)}</span>
+                    <span className="text-[#c2c6d8]">•</span>
+                    <span className="font-semibold text-[#0054cc]">
+                      {formatRelativeTime(n.createdAt, n.timestamp)}
+                    </span>
+                  </span>
                 </div>
                 <p className="text-xs text-[#424655] leading-relaxed">{n.message}</p>
               </div>

@@ -15,6 +15,7 @@ import {
   INITIAL_NOTIFICATIONS,
 } from '../data/mockData';
 import { db } from '../lib/firebase';
+import { formatRelativeTime } from '../lib/dateUtils';
 import {
   collection,
   doc,
@@ -247,7 +248,28 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           setDoc(doc(db, 'notifications', n.id), cleanData(n));
         });
       } else {
-        const items = snapshot.docs.map((doc) => doc.data() as NotificationItem);
+        const items = snapshot.docs.map((docSnap) => {
+          const data = docSnap.data() as NotificationItem;
+          // Backfill createdAt if missing
+          if (!data.createdAt) {
+            if (data.id === 'notif-1') data.createdAt = Date.now() - 2 * 24 * 60 * 60 * 1000;
+            else if (data.id === 'notif-2') data.createdAt = Date.now() - 5 * 24 * 60 * 60 * 1000;
+            else if (data.id === 'notif-3') data.createdAt = Date.now() - 35 * 24 * 60 * 60 * 1000;
+            else if (data.id === 'notif-4') data.createdAt = Date.now() - 75 * 24 * 60 * 60 * 1000;
+            else if (data.id.startsWith('notif-')) {
+              const parsed = parseInt(data.id.replace('notif-', ''), 10);
+              data.createdAt = isNaN(parsed) || parsed < 1000000000000 ? Date.now() : parsed;
+            } else {
+              data.createdAt = Date.now();
+            }
+          }
+          // Dynamically calculate timestamp according to action date and criteria
+          data.timestamp = formatRelativeTime(data.createdAt, data.timestamp);
+          return data;
+        });
+
+        // Sort descending: most recent action first
+        items.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
         setNotifications(items);
       }
     });
@@ -363,12 +385,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     setDoc(doc(db, 'chatMessages', initialMsg.id), cleanData(initialMsg));
 
     // Notification
+    const newNotifCreatedAt = Date.now();
     const newNotif: NotificationItem = {
-      id: `notif-${Date.now()}`,
+      id: `notif-${newNotifCreatedAt}`,
       type: 'REPAIR',
       title: `새 수리 요청: ${data.title}`,
       message: `${data.unit} (${data.tenantName})에서 수리 요청서를 작성했습니다.`,
       timestamp: '방금 전',
+      createdAt: newNotifCreatedAt,
       isRead: false,
       caseId: newId,
     };
@@ -436,12 +460,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       'APPROVAL_NOTICE'
     );
 
+    const approveNotifCreatedAt = Date.now();
     const newNotif: NotificationItem = {
-      id: `notif-${Date.now()}`,
+      id: `notif-${approveNotifCreatedAt}`,
       type: 'REPAIR',
       title: '견적 승인 완료!',
       message: `${approvedVendor} 업체의 견적(₩${approvedAmount.toLocaleString()})이 승인되었습니다.`,
       timestamp: '방금 전',
+      createdAt: approveNotifCreatedAt,
       isRead: false,
       caseId: caseId,
     };
@@ -554,12 +580,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       'TEXT'
     );
 
+    const vendorNotifCreatedAt = Date.now();
     const newNotif: NotificationItem = {
-      id: `notif-${Date.now()}`,
+      id: `notif-${vendorNotifCreatedAt}`,
       type: 'REPAIR',
       title: '수리업체 대화방 초대 발송',
       message: `'${vendorName}' 님에게 대화방 초대 링크를 발송했습니다.`,
       timestamp: '방금 전',
+      createdAt: vendorNotifCreatedAt,
       isRead: false,
       caseId: caseId,
     };

@@ -194,7 +194,8 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'REPAIR',
     title: '견적 승인 완료: 거실 에어컨 수리',
     message: '거실 에어컨 누수 수리에 대한 견적(₩150,000)이 승인되었습니다. 수리 기사 배정이 시작됩니다.',
-    timestamp: '방금 전',
+    timestamp: '2일 전',
+    createdAt: Date.now() - 2 * 24 * 60 * 60 * 1000, // 2일 전
     isRead: false,
     caseId: 'req-001'
   },
@@ -203,7 +204,8 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'MESSAGE',
     title: '임대인(김지수) 님으로부터 메시지',
     message: '"안녕하세요, 수리 기사님 방문 시간을 확인해 주실 수 있나요? 이번 주 토요일 오전 10시가..."',
-    timestamp: '15분 전',
+    timestamp: '5일 전',
+    createdAt: Date.now() - 5 * 24 * 60 * 60 * 1000, // 5일 전
     isRead: false,
     caseId: 'req-001'
   },
@@ -212,7 +214,8 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'CONTRACT',
     title: '임대 계약 만료 30일 전 안내',
     message: '서울특별시 강남구 테헤란로 123 그린빌 302호 계약이 45일 후 만료됩니다. 갱신 의사를 확인해 주세요.',
-    timestamp: '2시간 전',
+    timestamp: '1개월 전',
+    createdAt: Date.now() - 35 * 24 * 60 * 60 * 1000, // 35일 전 -> 1개월 전
     isRead: true,
   },
   {
@@ -220,7 +223,8 @@ export const INITIAL_NOTIFICATIONS: NotificationItem[] = [
     type: 'LEGAL',
     title: '2026년 주택임대차보호법 수리비 분담 가이드',
     message: '에어컨 수리비, 보일러 고장 시 임대인과 임차인의 수선 분담 기준을 명확하게 정리해 드립니다.',
-    timestamp: '어제',
+    timestamp: '2개월 전',
+    createdAt: Date.now() - 75 * 24 * 60 * 60 * 1000, // 75일 전 -> 2개월 전
     isRead: false,
   }
 ];

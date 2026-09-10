@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { Estimate } from '../types';
 import { Receipt, CheckCircle2, ShieldCheck, Plus, ArrowLeft, MessageSquare, Award, Clock } from 'lucide-react';
+import { formatRelativeTime } from '../lib/dateUtils';
 
 export const EstimateComparisonView: React.FC = () => {
   const { repairCases, activeRepairId, approveEstimate, addEstimateToCase, setActiveTab } = useApp();
@@ -70,7 +71,7 @@ export const EstimateComparisonView: React.FC = () => {
             {currentCase.title} - 투명 비교 견적서 ({currentCase.estimates.length}건)
           </h2>
           <p className="text-xs text-[#424655] mt-0.5">
-            소재지: <span className="font-bold text-[#1b1c1c]">{currentCase.unit}</span> | 접수일: {currentCase.createdAt}
+            소재지: <span className="font-bold text-[#1b1c1c]">{currentCase.unit}</span> | 접수일: {currentCase.createdAt} ({formatRelativeTime(currentCase.createdAt)})
           </p>
         </div>
 

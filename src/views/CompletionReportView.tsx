@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import { CheckCircle2, FileText, Download, ArrowLeft, ShieldCheck, Award, Calendar, DollarSign } from 'lucide-react';
+import { formatRelativeTime } from '../lib/dateUtils';
 
 export const CompletionReportView: React.FC = () => {
   const { repairCases, activeRepairId, setActiveTab } = useApp();
@@ -93,7 +94,9 @@ export const CompletionReportView: React.FC = () => {
             <div className="space-y-2">
               <div className="flex justify-between items-center text-xs font-bold text-[#EF4444]">
                 <span>[수리 전 상태]</span>
-                <span className="text-[#727787] font-normal">{currentCase.createdAt}</span>
+                <span className="text-[#727787] font-normal">
+                  {currentCase.createdAt} ({formatRelativeTime(currentCase.createdAt)})
+                </span>
               </div>
               <div className="aspect-video rounded-2xl overflow-hidden border border-[#c2c6d8] bg-black">
                 <img src={report.beforePhoto} alt="Before" className="w-full h-full object-cover" />
