@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { AppProvider, useApp } from './context/AppContext';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
 import { MobileNav } from './components/MobileNav';
 import { Footer } from './components/Footer';
-import { DesignConceptsModal } from './components/DesignConceptsModal';
-import { Sparkles } from 'lucide-react';
 
 import { RoleSelectionView } from './views/RoleSelectionView';
 import { LandlordDashboardView } from './views/LandlordDashboardView';
@@ -23,26 +21,9 @@ import { AuthView } from './views/AuthView';
 
 const MainContent: React.FC = () => {
   const { role, activeTab } = useApp();
-  const [showDesignModal, setShowDesignModal] = useState<boolean>(true);
 
   if (role === 'SELECTION' || activeTab === 'selection') {
-    return (
-      <>
-        <RoleSelectionView />
-        <DesignConceptsModal
-          isOpen={showDesignModal}
-          onClose={() => setShowDesignModal(false)}
-        />
-        {/* Floating trigger button */}
-        <button
-          onClick={() => setShowDesignModal(true)}
-          className="fixed bottom-6 right-6 z-50 bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-xl border border-neutral-700 flex items-center gap-2 transition-all cursor-pointer hover:scale-105 active:scale-95"
-        >
-          <Sparkles className="w-4 h-4 text-blue-400" />
-          <span>디자인 시안 3종 비교보기</span>
-        </button>
-      </>
-    );
+    return <RoleSelectionView />;
   }
 
   if (activeTab === 'auth') {
@@ -85,23 +66,6 @@ const MainContent: React.FC = () => {
       </main>
       <Footer />
       <MobileNav />
-
-      {/* Floating Design Concepts Trigger */}
-      <button
-        onClick={() => setShowDesignModal(true)}
-        className="fixed bottom-6 right-6 z-50 bg-neutral-900 hover:bg-neutral-800 text-white font-bold text-xs py-3 px-4 rounded-xl shadow-xl border border-neutral-700 flex items-center gap-2 transition-all cursor-pointer hover:scale-105 active:scale-95"
-        title="디자인 시안 3종 비교 뷰어 열기"
-      >
-        <Sparkles className="w-4 h-4 text-blue-400" />
-        <span className="hidden sm:inline">탈(脫) AI 디자인 시안 3종 비교</span>
-        <span className="sm:hidden">시안 비교</span>
-      </button>
-
-      {/* Design Concepts Modal */}
-      <DesignConceptsModal
-        isOpen={showDesignModal}
-        onClose={() => setShowDesignModal(false)}
-      />
     </div>
   );
 };
