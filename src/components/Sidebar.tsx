@@ -39,24 +39,26 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="h-screen w-64 fixed left-0 top-0 hidden md:flex flex-col bg-white shadow-sm border-r border-[#e5e2e1]/60 z-50 p-4">
+    <aside className="h-screen w-64 fixed left-0 top-0 hidden md:flex flex-col bg-white border-r border-[#E5E7EB] z-50 p-4">
       {/* Brand Header */}
-      <div className="mb-6 px-2 flex justify-between items-start">
-        <div onClick={() => setActiveTab('dashboard')} className="cursor-pointer">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-xl bg-[#0054cc] flex items-center justify-center text-white font-black text-base shadow-sm">
-              든
-            </div>
-            <h1 className="font-bold text-xl text-[#0054cc] tracking-tight">든든집사</h1>
+      <div className="mb-6 px-2 flex justify-between items-center">
+        <div onClick={() => setActiveTab('dashboard')} className="cursor-pointer group flex items-center gap-2.5">
+          <div className="w-7 h-7 rounded-lg bg-[#0F172A] flex items-center justify-center text-white font-bold text-xs tracking-tight">
+            든
           </div>
-          <p className="text-xs text-[#727787] font-medium mt-1">
-            {role === 'LANDLORD' ? '임대인 포털 (Landlord)' : '임차인 포털 (Tenant)'}
-          </p>
+          <div>
+            <h1 className="font-bold text-base text-neutral-900 tracking-tight leading-none group-hover:text-blue-600 transition-colors">
+              든든집사
+            </h1>
+            <p className="text-[11px] text-neutral-400 font-medium mt-1">
+              {role === 'LANDLORD' ? '임대인 파트너' : '임차인 홈'}
+            </p>
+          </div>
         </div>
 
         <button
           onClick={() => logout()}
-          className="text-[11px] text-[#ef4444] hover:underline font-semibold flex items-center gap-1 mt-1 cursor-pointer"
+          className="text-[11px] text-neutral-400 hover:text-red-600 font-medium transition-colors cursor-pointer"
           title="로그아웃"
         >
           로그아웃
@@ -74,18 +76,18 @@ export const Sidebar: React.FC = () => {
             <button
               key={item.id}
               onClick={() => handleNavClick(item.id)}
-              className={`w-full flex items-center justify-between p-3 rounded-xl font-medium text-sm transition-all cursor-pointer ${
+              className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all cursor-pointer ${
                 isActive
-                  ? 'text-[#0054cc] font-bold border-r-4 border-[#0054cc] bg-[#0054cc]/10 shadow-2xs'
-                  : 'text-[#424655] hover:bg-[#f0eded] hover:text-[#0054cc]'
+                  ? 'bg-neutral-100 text-neutral-950 font-semibold'
+                  : 'text-neutral-600 hover:bg-neutral-50 hover:text-neutral-900'
               }`}
             >
-              <div className="flex items-center gap-3">
-                <Icon className={`w-5 h-5 ${isActive ? 'text-[#0054cc]' : 'text-[#727787]'}`} />
+              <div className="flex items-center gap-2.5">
+                <Icon className={`w-4 h-4 ${isActive ? 'text-blue-600' : 'text-neutral-400'}`} />
                 <span>{item.label}</span>
               </div>
               {item.badge !== undefined && (
-                <span className="bg-[#EF4444] text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                <span className="font-mono text-[10px] text-white bg-blue-600 font-semibold px-1.5 py-0.2 rounded">
                   {item.badge}
                 </span>
               )}
@@ -95,29 +97,29 @@ export const Sidebar: React.FC = () => {
       </nav>
 
       {/* Bottom CTA Button */}
-      <div className="mt-auto pt-4 border-t border-[#e5e2e1]/80 space-y-3">
+      <div className="mt-auto pt-4 border-t border-[#E5E7EB] space-y-3">
         {role === 'TENANT' ? (
           <button
             onClick={() => setActiveTab('repair-request')}
-            className="w-full bg-[#0054cc] hover:bg-[#066bfd] text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer"
+            className="w-full bg-[#0F172A] hover:bg-[#1E293B] text-white py-2.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] transition-all cursor-pointer"
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4" />
             <span>수리 요청하기</span>
           </button>
         ) : (
           <button
             onClick={() => setActiveTab('dashboard')}
-            className="w-full bg-[#0054cc] hover:bg-[#066bfd] text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2 shadow-md hover:shadow-lg active:scale-95 transition-all cursor-pointer"
+            className="w-full bg-[#0F172A] hover:bg-[#1E293B] text-white py-2.5 rounded-lg font-semibold text-xs flex items-center justify-center gap-1.5 shadow-xs active:scale-[0.98] transition-all cursor-pointer"
           >
-            <Building className="w-5 h-5" />
+            <Building className="w-4 h-4" />
             <span>매물 및 수리 현황</span>
           </button>
         )}
 
         {/* User Mini Profile Card */}
-        <div className="flex items-center justify-between p-2.5 rounded-xl bg-[#EFF2F8] border border-[#c2c6d8]/30">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <div className="w-9 h-9 rounded-full overflow-hidden bg-white border border-[#c2c6d8] flex-shrink-0">
+        <div className="flex items-center justify-between p-2 rounded-lg bg-[#FAFAFA] border border-[#E5E7EB]">
+          <div className="flex items-center gap-2 overflow-hidden">
+            <div className="w-7 h-7 rounded-md overflow-hidden bg-neutral-100 border border-neutral-200 shrink-0">
               <img
                 src={
                   role === 'LANDLORD'
@@ -129,20 +131,18 @@ export const Sidebar: React.FC = () => {
               />
             </div>
             <div className="truncate">
-              <p className="text-xs font-bold text-[#1b1c1c] truncate">
+              <p className="text-xs font-semibold text-neutral-900 truncate leading-tight">
                 {role === 'LANDLORD' ? '김지수 관리자' : '김지우 님'}
               </p>
-              <p className="text-[11px] text-[#727787] truncate">
-                {role === 'LANDLORD' ? '보유 3개 매물' : '그린빌 302호'}
+              <p className="text-[10px] text-neutral-400 font-mono truncate">
+                {role === 'LANDLORD' ? '서초그랑자이 외 3건' : '그린빌 302호'}
               </p>
             </div>
           </div>
 
           <button
-            onClick={() => {
-              resetAllData();
-            }}
-            className="p-1.5 text-[#727787] hover:text-[#0054cc] transition-colors"
+            onClick={() => resetAllData()}
+            className="p-1 text-neutral-400 hover:text-neutral-700 transition-colors cursor-pointer"
             title="데이터 초기화"
           >
             <RefreshCw className="w-3.5 h-3.5" />

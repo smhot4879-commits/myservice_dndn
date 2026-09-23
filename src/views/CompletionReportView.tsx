@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { CheckCircle2, FileText, Download, ArrowLeft, ShieldCheck, Award, Calendar, DollarSign } from 'lucide-react';
+import { FileText, Download, ArrowLeft, Award, X } from 'lucide-react';
 import { formatRelativeTime } from '../lib/dateUtils';
 
 export const CompletionReportView: React.FC = () => {
@@ -12,13 +12,13 @@ export const CompletionReportView: React.FC = () => {
 
   if (!currentCase) {
     return (
-      <div className="max-w-4xl mx-auto p-12 text-center bg-white rounded-3xl border border-[#c2c6d8]/30 space-y-4 animate-in fade-in">
-        <FileText className="w-12 h-12 text-[#0054cc] mx-auto" />
-        <h3 className="text-lg font-bold text-[#1b1c1c]">수리 완료 및 정산 보고서가 없습니다.</h3>
-        <p className="text-xs text-[#727787]">수리가 완료된 건이 있거나 대시보드에서 완료건을 선택해주세요.</p>
+      <div className="max-w-4xl mx-auto p-12 text-center bg-white rounded-xl border border-neutral-200 space-y-4 shadow-xs">
+        <FileText className="w-10 h-10 text-neutral-400 mx-auto" />
+        <h3 className="text-base font-bold text-neutral-900">수리 완료 및 정산 보고서가 없습니다.</h3>
+        <p className="text-xs text-neutral-500">수리가 완료된 건이 있거나 대시보드에서 완료건을 선택해주세요.</p>
         <button
           onClick={() => setActiveTab('dashboard')}
-          className="px-5 py-2.5 bg-[#0054cc] text-white font-bold text-xs rounded-xl hover:bg-[#066bfd] transition-all cursor-pointer"
+          className="px-4 py-2 bg-[#0F172A] text-white font-semibold text-xs rounded-lg hover:bg-[#1E293B] transition-colors cursor-pointer"
         >
           대시보드로 돌아가기
         </button>
@@ -38,84 +38,89 @@ export const CompletionReportView: React.FC = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-200">
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#c2c6d8]/40 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 pb-4">
         <div>
           <button
             onClick={() => setActiveTab('dashboard')}
-            className="flex items-center gap-1.5 text-[#424655] hover:text-[#0054cc] font-bold text-sm cursor-pointer mb-1"
+            className="flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 font-semibold text-xs cursor-pointer mb-1.5 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5" />
             <span>대시보드로 돌아가기</span>
           </button>
-          <div className="flex items-center gap-3">
-            <h2 className="text-2xl font-extrabold text-[#1b1c1c]">수리 완료 및 정산 보고서</h2>
-            <span className="bg-[#10B981] text-white font-extrabold text-xs px-3 py-1 rounded-full flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              <span>수리 완료 ID: #{currentCase.id}</span>
-            </span>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
+              수리 완료 및 정산 보고서
+            </h2>
+            <div className="flex items-center gap-1 text-xs font-semibold text-emerald-700">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+              <span>완료 #{currentCase.id}</span>
+            </div>
           </div>
+          <p className="text-xs text-neutral-500 font-mono mt-0.5">
+            {currentCase.unit} · {currentCase.title}
+          </p>
         </div>
 
         <button
           onClick={() => setShowPdfModal(true)}
-          className="px-5 py-3 bg-[#0054cc] hover:bg-[#066bfd] text-white font-extrabold text-xs rounded-xl shadow-lg transition-all flex items-center gap-2 cursor-pointer"
+          className="px-3.5 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white font-semibold text-xs rounded-lg shadow-xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-98"
         >
-          <Download className="w-4 h-4" />
-          <span>합의 이력 요약서 (PDF) 다운로드</span>
+          <Download className="w-3.5 h-3.5" />
+          <span>합의 증명서 (PDF)</span>
         </button>
       </div>
 
       {/* Main Report Container */}
-      <div className="bg-white p-6 sm:p-8 rounded-3xl shadow-xs border border-[#c2c6d8]/40 space-y-8">
+      <div className="bg-white p-5 sm:p-6 rounded-xl shadow-xs border border-neutral-200 space-y-6">
         {/* Verification Banner */}
-        <div className="bg-[#10B981]/10 p-5 rounded-2xl border border-[#10B981]/30 flex items-center gap-4">
-          <div className="w-12 h-12 rounded-2xl bg-[#10B981] text-white flex items-center justify-center font-bold text-xl shrink-0">
+        <div className="bg-emerald-50/60 p-4 rounded-lg border border-emerald-200 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-md bg-emerald-600 text-white flex items-center justify-center font-bold text-sm shrink-0">
             ✓
           </div>
           <div>
-            <h3 className="font-extrabold text-base text-[#1b1c1c]">임대인 - 임차인 수리 합의 체결 완료</h3>
-            <p className="text-xs text-[#424655] mt-0.5">
-              본 수리건은 든든집사 투명 시스템을 통해 견적 승인 및 수리 검수가 정당하게 완료되었습니다.
+            <h3 className="font-bold text-xs text-emerald-950">임대인 - 임차인 수리 합의 체결 완료</h3>
+            <p className="text-xs text-emerald-800/80 mt-0.5">
+              본 수리 건은 든든집사 투명 비교 견적 시스템을 통해 비용 승인 및 현장 검수가 완료되었습니다.
             </p>
           </div>
         </div>
 
         {/* Before vs After Gallery */}
         <div>
-          <h3 className="font-extrabold text-base text-[#1b1c1c] mb-4 flex items-center gap-2">
-            <Award className="w-5 h-5 text-[#0054cc]" />
+          <h3 className="font-bold text-xs text-neutral-900 mb-3 flex items-center gap-1.5">
+            <Award className="w-4 h-4 text-neutral-700" />
             <span>수리 전 / 수리 후 현장 비교 검수</span>
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Before Card */}
             <div className="space-y-2">
-              <div className="flex justify-between items-center text-xs font-bold text-[#EF4444]">
-                <span>[수리 전 상태]</span>
-                <span className="text-[#727787] font-normal">
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-semibold text-rose-600">[수리 전]</span>
+                <span className="text-neutral-400 font-mono text-[11px]">
                   {currentCase.createdAt} ({formatRelativeTime(currentCase.createdAt)})
                 </span>
               </div>
-              <div className="aspect-video rounded-2xl overflow-hidden border border-[#c2c6d8] bg-black">
+              <div className="aspect-video rounded-lg overflow-hidden border border-neutral-200 bg-neutral-100">
                 <img src={report.beforePhoto} alt="Before" className="w-full h-full object-cover" />
               </div>
-              <p className="text-xs text-[#424655] bg-[#fcf9f8] p-3 rounded-xl border border-[#c2c6d8]/30 leading-relaxed">
+              <p className="text-xs text-neutral-600 bg-neutral-50 p-3 rounded-lg border border-neutral-100 leading-relaxed">
                 {report.beforeNote}
               </p>
             </div>
 
             {/* After Card */}
             <div className="space-y-2">
-              <div className="flex justify-between items-center text-xs font-bold text-[#10B981]">
-                <span>[수리 완료 후 상태]</span>
-                <span className="text-[#727787] font-normal">{report.completedAt}</span>
+              <div className="flex justify-between items-center text-xs">
+                <span className="font-semibold text-emerald-600">[수리 후]</span>
+                <span className="text-neutral-400 font-mono text-[11px]">{report.completedAt}</span>
               </div>
-              <div className="aspect-video rounded-2xl overflow-hidden border border-[#10B981] bg-black">
+              <div className="aspect-video rounded-lg overflow-hidden border border-neutral-200 bg-neutral-100">
                 <img src={report.afterPhoto} alt="After" className="w-full h-full object-cover" />
               </div>
-              <p className="text-xs text-[#424655] bg-[#10B981]/5 p-3 rounded-xl border border-[#10B981]/20 leading-relaxed">
+              <p className="text-xs text-neutral-600 bg-neutral-50 p-3 rounded-lg border border-neutral-100 leading-relaxed">
                 {report.afterNote}
               </p>
             </div>
@@ -123,32 +128,32 @@ export const CompletionReportView: React.FC = () => {
         </div>
 
         {/* Milestone & Cost Summary */}
-        <div className="bg-[#f6f3f2] p-6 rounded-2xl space-y-4 border border-[#c2c6d8]/40">
-          <h4 className="font-extrabold text-sm text-[#1b1c1c] border-b border-[#c2c6d8]/30 pb-2">
+        <div className="bg-neutral-50 p-4 rounded-lg space-y-3 border border-neutral-200">
+          <h4 className="font-bold text-xs text-neutral-900 border-b border-neutral-200 pb-2">
             최종 정산 및 시공 정보
           </h4>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs font-mono">
             <div>
-              <span className="text-[#727787]">시공 수리 업체</span>
-              <p className="font-bold text-sm text-[#1b1c1c] mt-0.5">{report.vendorName}</p>
+              <span className="text-neutral-400 text-[11px] block">시공 수리 업체</span>
+              <p className="font-semibold text-neutral-900 mt-0.5">{report.vendorName}</p>
             </div>
 
             <div>
-              <span className="text-[#727787]">최종 승인 결제액</span>
-              <p className="font-extrabold text-base text-[#0054cc] mt-0.5">
+              <span className="text-neutral-400 text-[11px] block">최종 승인 결제액</span>
+              <p className="font-bold text-sm text-neutral-900 mt-0.5 tabular-nums">
                 ₩{report.finalAmount.toLocaleString()}원
               </p>
             </div>
 
             <div>
-              <span className="text-[#727787]">하자 보수 보증</span>
-              <p className="font-bold text-sm text-[#10B981] mt-0.5">1년간 무상 AS 제공</p>
+              <span className="text-neutral-400 text-[11px] block">하자 보수 보증</span>
+              <p className="font-semibold text-emerald-700 mt-0.5">1년간 무상 AS</p>
             </div>
           </div>
 
-          <div className="pt-2 text-xs text-[#424655]">
-            <span className="font-bold text-[#1b1c1c]">특이사항: </span>
+          <div className="pt-2 text-xs text-neutral-500 border-t border-neutral-200/80">
+            <span className="font-semibold text-neutral-700">특이사항: </span>
             {report.specialNotes}
           </div>
         </div>
@@ -156,68 +161,68 @@ export const CompletionReportView: React.FC = () => {
 
       {/* PDF Document Preview Modal */}
       {showPdfModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[85vh] overflow-y-auto shadow-2xl space-y-6">
-            <div className="flex justify-between items-center border-b border-[#f0eded] pb-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 max-w-xl w-full max-h-[85vh] overflow-y-auto shadow-xl space-y-4 border border-neutral-200 animate-in zoom-in-95 duration-150">
+            <div className="flex justify-between items-center border-b border-neutral-100 pb-3">
               <div className="flex items-center gap-2">
-                <FileText className="w-6 h-6 text-[#0054cc]" />
-                <h3 className="text-xl font-bold text-[#1b1c1c]">수리 및 비용 정산 합의 증명서</h3>
+                <FileText className="w-4 h-4 text-neutral-800" />
+                <h3 className="text-sm font-bold text-neutral-900">수리 및 비용 정산 합의 증명서</h3>
               </div>
               <button
                 onClick={() => setShowPdfModal(false)}
-                className="text-[#727787] hover:text-[#1b1c1c] text-2xl font-bold cursor-pointer"
+                className="text-neutral-400 hover:text-neutral-700 cursor-pointer"
               >
-                ×
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Document Printable Paper View */}
-            <div className="bg-[#fcf9f8] p-8 border-2 border-[#1b1c1c] rounded-xl space-y-6 text-[#1b1c1c] font-mono text-xs">
-              <div className="text-center border-b-2 border-[#1b1c1c] pb-4">
-                <h1 className="text-xl font-black tracking-widest">수리 비용 및 상태 합의서</h1>
-                <p className="text-[10px] text-[#727787] mt-1">발행번호: #CERT-2026-99201 | 든든집사 전자서명</p>
+            <div className="bg-neutral-50 p-6 border border-neutral-300 rounded-lg space-y-4 text-neutral-900 font-mono text-xs">
+              <div className="text-center border-b border-neutral-300 pb-3">
+                <h1 className="text-sm font-bold tracking-widest uppercase">수리 비용 및 시설 합의서</h1>
+                <p className="text-[10px] text-neutral-400 mt-0.5">인증번호: #CERT-2026-99201 · 전자서명 원본</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <p className="font-bold border-b border-[#1b1c1c] pb-1">1. 임대인 (건물주)</p>
+              <div className="grid grid-cols-2 gap-3 text-[11px]">
+                <div className="bg-white p-2.5 rounded border border-neutral-200">
+                  <p className="font-bold text-neutral-700 border-b border-neutral-200 pb-1">1. 임대인 (소유자)</p>
                   <p className="mt-1">성명: 김지수 님</p>
-                  <p>건물: 그린빌 302호</p>
+                  <p>호실: 그린빌 302호</p>
                 </div>
-                <div>
-                  <p className="font-bold border-b border-[#1b1c1c] pb-1">2. 임차인 (거주자)</p>
+                <div className="bg-white p-2.5 rounded border border-neutral-200">
+                  <p className="font-bold text-neutral-700 border-b border-neutral-200 pb-1">2. 임차인 (거주자)</p>
                   <p className="mt-1">성명: {currentCase.tenantName}</p>
                   <p>계약: 월세 (1000/85)</p>
                 </div>
               </div>
 
-              <div>
-                <p className="font-bold border-b border-[#1b1c1c] pb-1">3. 수리 및 정산 요약</p>
+              <div className="bg-white p-2.5 rounded border border-neutral-200 text-[11px]">
+                <p className="font-bold text-neutral-700 border-b border-neutral-200 pb-1">3. 수리 및 정산 내역</p>
                 <p className="mt-1">수리건: {currentCase.title}</p>
-                <p>시공업체: {report.vendorName}</p>
-                <p>최종 금액: ₩{report.finalAmount.toLocaleString()}원 (임대인 부담 완료)</p>
+                <p>시공사: {report.vendorName}</p>
+                <p>정산금액: ₩{report.finalAmount.toLocaleString()}원 (임대인 부담 완료)</p>
               </div>
 
-              <div className="text-center pt-6 border-t border-[#1b1c1c]">
-                <p className="font-bold text-sm">위 수리건에 대하여 상호 원만히 검수 완료하였음을 증명합니다.</p>
-                <p className="text-[10px] mt-2">2026년 07월 26일</p>
-                <p className="font-extrabold text-sm text-[#0054cc] mt-1">든든집사 (DUNDUN HOUSE) 전자인증</p>
+              <div className="text-center pt-3 border-t border-neutral-300 text-[11px]">
+                <p className="font-semibold">위 수리건에 대하여 상호 원만히 검수 완료하였음을 증명합니다.</p>
+                <p className="text-[10px] text-neutral-400 mt-1">2026년 07월 26일</p>
+                <p className="font-bold text-xs text-blue-600 mt-1">든든집사 (DUNDUN HOUSE) 전자인증</p>
               </div>
             </div>
 
-            <div className="flex gap-3">
+            <div className="flex gap-2 pt-1">
               <button
                 onClick={() => {
-                  alert('PDF 파일이 다운로드 폴더에 저장되었습니다.');
+                  alert('PDF 파일이 저장되었습니다.');
                   setShowPdfModal(false);
                 }}
-                className="flex-1 py-3.5 bg-[#0054cc] text-white font-bold text-sm rounded-xl shadow-md hover:bg-[#066bfd] cursor-pointer"
+                className="flex-1 py-2 bg-[#0F172A] hover:bg-[#1E293B] text-white font-semibold text-xs rounded-lg shadow-xs cursor-pointer"
               >
-                PDF 다운로드 실행
+                PDF 다운로드
               </button>
               <button
                 onClick={() => setShowPdfModal(false)}
-                className="px-6 py-3.5 border border-[#c2c6d8] text-[#424655] font-bold text-sm rounded-xl hover:bg-[#f6f3f2] cursor-pointer"
+                className="px-4 py-2 border border-neutral-200 text-neutral-600 font-semibold text-xs rounded-lg hover:bg-neutral-50 cursor-pointer"
               >
                 닫기
               </button>

@@ -4,22 +4,16 @@ import {
   Send,
   Image as ImageIcon,
   ShieldCheck,
-  CheckCircle2,
   Receipt,
-  FileCheck,
   ArrowLeft,
-  Wrench,
-  AlertCircle,
   UserPlus,
   Phone,
   Link as LinkIcon,
   Copy,
   ExternalLink,
-  MessageSquare,
   Check,
   Share2,
   Building2,
-  UserCheck,
   X,
   Sparkles,
 } from 'lucide-react';
@@ -64,26 +58,24 @@ export const ChatView: React.FC = () => {
   };
 
   useEffect(() => {
-    scrollToBottom(true);
-  }, [caseMessages]);
+    scrollToBottom(false);
+  }, [currentCase?.id]);
 
-  const handleInputFocus = () => {
-    setTimeout(() => {
-      scrollToBottom(true);
-    }, 150);
-  };
+  useEffect(() => {
+    scrollToBottom(true);
+  }, [chatMessages.length]);
 
   if (!currentCase) {
     return (
-      <div className="max-w-4xl mx-auto p-12 text-center bg-white rounded-3xl border border-[#c2c6d8]/30 space-y-4 animate-in fade-in">
-        <MessageSquare className="w-12 h-12 text-[#0054cc] mx-auto" />
-        <h3 className="text-lg font-bold text-[#1b1c1c]">선택되거나 등록된 수리 요청건이 없습니다.</h3>
-        <p className="text-xs text-[#727787]">수리 요청서를 작성하시거나 대시보드에서 수리건을 선택해주세요.</p>
+      <div className="max-w-4xl mx-auto p-12 text-center bg-white rounded-xl border border-neutral-200 space-y-4 shadow-xs">
+        <Receipt className="w-10 h-10 text-neutral-400 mx-auto" />
+        <h3 className="text-base font-bold text-neutral-900">선택된 수리 요청건이 없습니다.</h3>
+        <p className="text-xs text-neutral-500">대시보드에서 수리건을 선택하거나 새로운 요청서를 작성해주세요.</p>
         <button
-          onClick={() => setActiveTab('repair-request')}
-          className="px-5 py-2.5 bg-[#0054cc] text-white font-bold text-xs rounded-xl hover:bg-[#066bfd] transition-all cursor-pointer"
+          onClick={() => setActiveTab('dashboard')}
+          className="px-4 py-2 bg-[#0F172A] text-white font-semibold text-xs rounded-lg hover:bg-[#1E293B] cursor-pointer"
         >
-          수리 요청서 작성하기
+          대시보드로 돌아가기
         </button>
       </div>
     );
@@ -93,24 +85,26 @@ export const ChatView: React.FC = () => {
     e.preventDefault();
     if (!inputMsg.trim()) return;
 
-    let senderRole: 'LANDLORD' | 'TENANT' | 'TECHNICIAN' = 'TENANT';
-    let senderName = '김지우 님';
+    let senderRole: 'LANDLORD' | 'TENANT' | 'TECHNICIAN' = 'LANDLORD';
+    let senderName = '임대인 김지수';
 
-    if (role === 'LANDLORD') {
-      senderRole = 'LANDLORD';
-      senderName = '임대인 김지수';
+    if (role === 'TENANT') {
+      senderRole = 'TENANT';
+      senderName = '김지우 님';
     } else if (role === 'VENDOR') {
       senderRole = 'TECHNICIAN';
-      senderName = currentCase.invitedVendors?.[0]?.vendorName
-        ? `수리업체 (${currentCase.invitedVendors[0].vendorName})`
-        : '수리업체 (성진에어컨)';
+      senderName = currentCase.invitedVendors?.[0]?.vendorName || '수리업체 (성진에어컨)';
     }
 
-    sendChatMessage(currentCase.id, senderRole, senderName, inputMsg);
+    sendChatMessage(currentCase.id, senderRole, senderName, inputMsg.trim());
     setInputMsg('');
+    setTimeout(() => scrollToBottom(true), 50);
+  };
+
+  const handleInputFocus = () => {
     setTimeout(() => {
       scrollToBottom(true);
-    }, 50);
+    }, 200);
   };
 
   const handleQuickHashtag = (tag: string) => {
@@ -198,63 +192,49 @@ export const ChatView: React.FC = () => {
     setGeneratedInviteCode(null);
   };
 
-  const handleCompleteRepairReport = () => {
-    completeRepair(currentCase.id, {
-      beforePhoto: currentCase.photos[0] || 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=600&q=80',
-      afterPhoto: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
-      beforeNote: currentCase.symptom,
-      afterNote: '냉매 가스 회수 후 방수 정밀 테이핑 및 가스 완충 완료. 시원한 냉풍 정상 출력 검수 완료.',
-      completedAt: new Date().toISOString().replace('T', ' ').slice(0, 16).replace(/-/g, '.'),
-      vendorName: currentCase.estimates[0]?.vendorName || inviteVendorName || '(주) 바른수리 인테리어',
-      finalAmount: currentCase.estimates[0]?.amount || 150000,
-      specialNotes: '시공 후 1년 하자 보수 보증서 발행. 임차인 최종 서명 수령 완료.',
-    });
-    setActiveTab('completion');
-  };
-
   const fullInviteUrl = `https://dundeun-jibsa.app/invite/${currentCase.id}?code=${generatedInviteCode || 'v-8821'}`;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-3 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-3 animate-in fade-in duration-200">
       {/* VENDOR Mode Active Banner */}
       {role === 'VENDOR' && (
-        <div className="bg-[#10B981] text-white p-3 rounded-2xl shadow-sm flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+        <div className="bg-emerald-700 text-white px-4 py-2.5 rounded-lg shadow-xs flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2">
             <Building2 className="w-4 h-4 text-white shrink-0" />
             <span>수리업체 무로그인 대화 참여 모드</span>
           </div>
           <button
             onClick={() => setRole('LANDLORD')}
-            className="px-3 py-1 bg-white hover:bg-emerald-50 text-[#065F46] font-bold text-[11px] rounded-lg shadow-2xs transition-all cursor-pointer whitespace-nowrap"
+            className="px-2.5 py-1 bg-white text-emerald-800 font-semibold text-[11px] rounded transition-colors cursor-pointer"
           >
             임대인/임차인 화면으로 전환
           </button>
         </div>
       )}
 
-      {/* Main Clean Chat Window Container */}
-      <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xs border border-[#c2c6d8]/40 flex flex-col h-[calc(100vh-180px)] min-h-[500px] max-h-[720px] overflow-hidden">
-        {/* Minimalist Stream Header */}
-        <div className="p-3.5 sm:p-4 border-b border-[#c2c6d8]/30 flex justify-between items-center bg-[#fcf9f8] rounded-t-2xl sm:rounded-t-3xl shrink-0">
+      {/* Main Chat Window */}
+      <div className="bg-white rounded-xl shadow-xs border border-neutral-200 flex flex-col h-[calc(100vh-180px)] min-h-[500px] max-h-[720px] overflow-hidden">
+        {/* Stream Header */}
+        <div className="p-3 sm:p-4 border-b border-neutral-200 flex justify-between items-center bg-white shrink-0">
           <div className="flex items-center gap-2.5 min-w-0">
             <button
               onClick={() => setActiveTab('dashboard')}
-              className="p-1.5 hover:bg-[#f0eded] rounded-xl text-[#727787] cursor-pointer shrink-0"
+              className="p-1 hover:bg-neutral-100 rounded text-neutral-500 cursor-pointer shrink-0 transition-colors"
               title="대시보드로 돌아가기"
             >
-              <ArrowLeft className="w-5 h-5" />
+              <ArrowLeft className="w-4 h-4" />
             </button>
             <div className="min-w-0">
               <div className="flex items-center gap-2 truncate">
-                <span className="font-extrabold text-sm sm:text-base text-[#1b1c1c] truncate">
+                <span className="font-bold text-sm text-neutral-900 truncate">
                   {currentCase.title}
                 </span>
-                <span className="bg-[#0054cc]/10 text-[#0054cc] font-bold text-[11px] px-2 py-0.5 rounded-full shrink-0">
+                <span className="font-mono text-xs text-neutral-400 shrink-0">
                   {currentCase.unit}
                 </span>
               </div>
-              <p className="text-[11px] text-[#727787] truncate">
-                {currentCase.tenantName} | {currentCase.category}
+              <p className="text-[11px] text-neutral-400 font-mono truncate mt-0.5">
+                {currentCase.tenantName} · {currentCase.category}
               </p>
             </div>
           </div>
@@ -266,40 +246,38 @@ export const ChatView: React.FC = () => {
                 setGeneratedInviteCode(null);
                 setShowInviteModal(true);
               }}
-              className="px-2.5 py-1.5 bg-[#0054cc]/10 hover:bg-[#0054cc]/20 text-[#0054cc] font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer transition-all"
-              title="수리업체 초대"
+              className="px-2.5 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold text-xs rounded-md flex items-center gap-1 cursor-pointer transition-colors"
             >
-              <UserPlus className="w-3.5 h-3.5" />
+              <UserPlus className="w-3.5 h-3.5 text-neutral-600" />
               <span className="hidden sm:inline">업체 초대</span>
             </button>
             <button
               onClick={() => setActiveTab('estimates')}
-              className="px-2.5 py-1.5 bg-[#f0eded] hover:bg-[#e5e2e1] text-[#1b1c1c] font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer"
-              title="견적서 확인"
+              className="px-2.5 py-1.5 bg-[#0F172A] hover:bg-[#1E293B] text-white font-semibold text-xs rounded-md flex items-center gap-1 cursor-pointer shadow-xs transition-colors"
             >
-              <Receipt className="w-3.5 h-3.5 text-[#0054cc]" />
+              <Receipt className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">견적 ({currentCase.estimates.length})</span>
             </button>
           </div>
         </div>
 
         {/* Messages Scroll Area */}
-        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-3.5 sm:p-5 space-y-3.5 bg-[#faf9f8]">
-          {/* Embedded Move In Record Card if exists */}
+        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50/40">
+          {/* Embedded Move In Record Card */}
           {currentCase.moveInRecord && (
-            <div className="bg-[#dae2ff]/30 p-3.5 rounded-2xl border border-[#0054cc]/20 space-y-2 max-w-md mx-auto">
-              <div className="flex items-center justify-between text-xs font-bold text-[#001847]">
+            <div className="bg-white p-3.5 rounded-lg border border-neutral-200 space-y-2 max-w-md mx-auto shadow-xs">
+              <div className="flex items-center justify-between text-xs font-semibold text-neutral-900">
                 <span className="flex items-center gap-1.5">
-                  <ShieldCheck className="w-4 h-4 text-[#0054cc]" />
-                  <span>입주 시 상태 기록</span>
+                  <ShieldCheck className="w-4 h-4 text-blue-600" />
+                  <span>입주 시 상태 사진 기록</span>
                 </span>
-                <span className="text-[10px] text-[#727787]">{currentCase.moveInRecord.recordedAt}</span>
+                <span className="text-[10px] text-neutral-400 font-mono">{currentCase.moveInRecord.recordedAt}</span>
               </div>
-              <p className="text-xs text-[#424655] leading-relaxed">{currentCase.moveInRecord.note}</p>
+              <p className="text-xs text-neutral-600 leading-relaxed">{currentCase.moveInRecord.note}</p>
               <img
                 src={currentCase.moveInRecord.photoUrl}
                 alt="Move In Evidence"
-                className="w-full h-36 object-cover rounded-xl border border-[#c2c6d8]"
+                className="w-full h-32 object-cover rounded border border-neutral-200"
               />
             </div>
           )}
@@ -316,7 +294,7 @@ export const ChatView: React.FC = () => {
             if (isSystem) {
               return (
                 <div key={msg.id} className="flex justify-center my-2">
-                  <div className="bg-[#f0eded] text-[#424655] text-xs font-semibold px-3.5 py-1 rounded-2xl border border-[#c2c6d8]/40 shadow-2xs text-center max-w-md">
+                  <div className="bg-neutral-100 text-neutral-600 text-[11px] font-mono px-3 py-1 rounded border border-neutral-200 text-center max-w-md">
                     {msg.message}
                   </div>
                 </div>
@@ -325,22 +303,22 @@ export const ChatView: React.FC = () => {
 
             return (
               <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
-                <div className="flex items-center gap-1.5 mb-0.5 px-1">
-                  <span className="text-[10px] font-bold text-[#727787]">{msg.senderName}</span>
+                <div className="flex items-center gap-1.5 mb-1 px-1">
+                  <span className="text-[11px] font-medium text-neutral-500">{msg.senderName}</span>
                   {isTechnician && (
-                    <span className="bg-[#10B981]/15 text-[#065F46] text-[9px] font-extrabold px-1.5 py-0.2 rounded-md">
-                      수리기사/업체
+                    <span className="text-[10px] font-semibold text-emerald-700 font-mono">
+                      [수리기사]
                     </span>
                   )}
                 </div>
 
                 <div
-                  className={`max-w-[85%] sm:max-w-[75%] p-3 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-2xs ${
+                  className={`max-w-[85%] sm:max-w-[75%] p-3 rounded-lg text-xs leading-relaxed ${
                     isMe
-                      ? 'bg-[#0054cc] text-white rounded-tr-none'
+                      ? 'bg-[#0F172A] text-white shadow-xs'
                       : isTechnician
-                      ? 'bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/30 rounded-tl-none font-medium'
-                      : 'bg-white text-[#1b1c1c] rounded-tl-none border border-[#c2c6d8]/40'
+                      ? 'bg-emerald-50 text-emerald-950 border border-emerald-200'
+                      : 'bg-white text-neutral-900 border border-neutral-200 shadow-xs'
                   }`}
                 >
                   <p>{msg.message}</p>
@@ -349,37 +327,37 @@ export const ChatView: React.FC = () => {
                     <img
                       src={msg.attachmentUrl}
                       alt="Attachment"
-                      className="mt-2 rounded-xl border border-white/20 max-h-48 w-full object-cover"
+                      className="mt-2 rounded border border-black/10 max-h-48 w-full object-cover"
                     />
                   )}
                 </div>
-                <span className="text-[9px] sm:text-[10px] text-[#727787] mt-0.5 px-1">{msg.timestamp}</span>
+                <span className="text-[10px] text-neutral-400 font-mono mt-1 px-1">{msg.timestamp}</span>
               </div>
             );
           })}
         </div>
 
         {/* Quick Hashtag Chips */}
-        <div className="px-3 py-1.5 border-t border-[#c2c6d8]/30 bg-[#fcf9f8] flex items-center gap-1.5 overflow-x-auto shrink-0">
-          <span className="text-[10px] font-bold text-[#727787] whitespace-nowrap">빠른 입력:</span>
+        <div className="px-3 py-1.5 border-t border-neutral-200 bg-white flex items-center gap-1.5 overflow-x-auto shrink-0">
+          <span className="text-[11px] font-mono text-neutral-400 whitespace-nowrap">빠른 태그:</span>
 
           {role === 'VENDOR' ? (
             <>
               <button
                 onClick={() => handleQuickHashtag('VENDOR_QUOTE')}
-                className="px-2.5 py-0.5 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-[11px] font-extrabold whitespace-nowrap cursor-pointer"
+                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
               >
                 #견적서_제출
               </button>
               <button
                 onClick={() => handleQuickHashtag('VENDOR_VISIT')}
-                className="px-2.5 py-0.5 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-[11px] font-extrabold whitespace-nowrap cursor-pointer"
+                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
               >
                 #방문일정_제안
               </button>
               <button
                 onClick={() => handleQuickHashtag('VENDOR_DONE')}
-                className="px-2.5 py-0.5 bg-white hover:bg-[#E6F4EA] text-[#065F46] border border-[#10B981]/40 rounded-full text-[11px] font-extrabold whitespace-nowrap cursor-pointer"
+                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
               >
                 #수리완료_보고
               </button>
@@ -388,19 +366,19 @@ export const ChatView: React.FC = () => {
             <>
               <button
                 onClick={() => handleQuickHashtag('MOVE_IN')}
-                className="px-2.5 py-0.5 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-[11px] font-semibold whitespace-nowrap cursor-pointer"
+                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
               >
                 #입주상태_기록
               </button>
               <button
                 onClick={() => handleQuickHashtag('VISIT')}
-                className="px-2.5 py-0.5 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-[11px] font-semibold whitespace-nowrap cursor-pointer"
+                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
               >
                 #방문요청
               </button>
               <button
                 onClick={() => handleQuickHashtag('PAYMENT')}
-                className="px-2.5 py-0.5 bg-white hover:bg-[#dae2ff] text-[#0054cc] border border-[#0054cc]/30 rounded-full text-[11px] font-semibold whitespace-nowrap cursor-pointer"
+                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
               >
                 #입금확인
               </button>
@@ -409,7 +387,7 @@ export const ChatView: React.FC = () => {
         </div>
 
         {/* Input Box Bar */}
-        <form onSubmit={handleSend} className="p-2 sm:p-3 border-t border-[#c2c6d8]/40 flex items-center gap-2 bg-white rounded-b-2xl sm:rounded-b-3xl shrink-0">
+        <form onSubmit={handleSend} className="p-2.5 border-t border-neutral-200 flex items-center gap-2 bg-white shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -423,10 +401,10 @@ export const ChatView: React.FC = () => {
                 sampleImg
               );
             }}
-            className="p-2 text-[#727787] hover:text-[#0054cc] hover:bg-[#f0eded] rounded-xl transition-colors cursor-pointer shrink-0"
+            className="p-1.5 text-neutral-400 hover:text-neutral-700 rounded transition-colors cursor-pointer shrink-0"
             title="사진 첨부"
           >
-            <ImageIcon className="w-5 h-5" />
+            <ImageIcon className="w-4 h-4" />
           </button>
 
           <input
@@ -439,183 +417,163 @@ export const ChatView: React.FC = () => {
                 ? '수리 기사 메시지를 입력하세요 (견적, 일정 등)...'
                 : '대화 메시지를 입력하세요...'
             }
-            className="flex-1 py-2 px-3 sm:px-4 bg-[#f6f3f2] focus:bg-white border border-transparent focus:border-[#0054cc] rounded-xl outline-none text-xs sm:text-sm transition-all"
+            className="flex-1 py-1.5 px-3 bg-neutral-50 focus:bg-white border border-neutral-200 focus:border-neutral-400 rounded-lg outline-none text-xs transition-colors"
           />
 
           <button
             type="submit"
-            className="p-2.5 bg-[#0054cc] hover:bg-[#066bfd] text-white rounded-xl shadow-md active:scale-95 transition-all cursor-pointer shrink-0"
+            className="p-2 bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer shrink-0"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-3.5 h-3.5" />
           </button>
         </form>
       </div>
 
-      {/* Vendor Invitation Modal (수리업체 초대 모달) */}
+      {/* Vendor Invitation Modal */}
       {showInviteModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-6 relative border border-[#c2c6d8]/40 animate-in zoom-in-95 duration-200">
-            <button
-              type="button"
-              onClick={() => {
-                setShowInviteModal(false);
-                setGeneratedInviteCode(null);
-              }}
-              className="absolute top-5 right-5 text-[#727787] hover:text-[#1b1c1c] p-1 rounded-full hover:bg-[#f0eded] transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl p-6 max-w-md w-full shadow-xl space-y-4 relative border border-neutral-200 animate-in zoom-in-95 duration-150">
+            <div className="flex justify-between items-center border-b border-neutral-100 pb-3">
+              <h3 className="text-sm font-bold text-neutral-900">수리업체 3자 대화방 초대</h3>
+              <button
+                type="button"
+                onClick={() => {
+                  setShowInviteModal(false);
+                  setGeneratedInviteCode(null);
+                }}
+                className="text-neutral-400 hover:text-neutral-700 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
 
             {!generatedInviteCode ? (
-              /* Step 1: Input Form */
-              <form onSubmit={handleSendInviteLink} className="space-y-5">
+              <form onSubmit={handleSendInviteLink} className="space-y-3">
+                <p className="text-xs text-neutral-500 leading-relaxed">
+                  수리 기사님은 별도 회원가입 없이 발송된 전용 링크로 즉시 대화방에 참여하여 견적과 일정을 조율할 수 있습니다.
+                </p>
+
                 <div>
-                  <div className="flex items-center gap-2">
-                    <UserPlus className="w-6 h-6 text-[#0054cc]" />
-                    <h3 className="text-xl font-bold text-[#1b1c1c]">수리업체 3자 대화방 초대</h3>
-                  </div>
-                  <p className="text-xs text-[#727787] mt-1 leading-relaxed">
-                    수리 기사님은 <strong className="text-[#0054cc]">별도의 회원가입 및 로그인 없이</strong> 발송된 전용 링크만 누르면 대화방에 즉시 참여하여 견적 제출 및 방문 일정을 협의할 수 있습니다.
-                  </p>
+                  <label className="block text-xs font-semibold text-neutral-700 mb-1">
+                    수리업체 / 기사명 *
+                  </label>
+                  <input
+                    type="text"
+                    value={inviteVendorName}
+                    onChange={(e) => setInviteVendorName(e.target.value)}
+                    placeholder="예: (주) 성진에어컨 기술팀"
+                    required
+                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs outline-none focus:bg-white focus:border-blue-600"
+                  />
                 </div>
 
-                <div className="p-3.5 bg-[#EFF2F8] border border-[#0054cc]/20 rounded-2xl flex items-center gap-2.5 text-xs text-[#001847]">
-                  <Sparkles className="w-4 h-4 text-[#0054cc] shrink-0" />
-                  <span>임대인-임차인-수리업체 3자 대화로 수리 분쟁을 사전에 완전 방지합니다.</span>
-                </div>
-
-                <div className="space-y-3.5">
-                  <div>
-                    <label className="block text-xs font-bold text-[#424655] mb-1">
-                      수리업체 / 기사님 상호명 <span className="text-red-500">*</span>
-                    </label>
+                <div>
+                  <label className="block text-xs font-semibold text-neutral-700 mb-1">
+                    기사님 연락처 *
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-400" />
                     <input
                       type="text"
-                      value={inviteVendorName}
-                      onChange={(e) => setInviteVendorName(e.target.value)}
-                      placeholder="예: (주) 성진에어컨 기술팀"
+                      value={invitePhone}
+                      onChange={(e) => setInvitePhone(e.target.value)}
+                      placeholder="010-9876-5432"
                       required
-                      className="w-full p-3 bg-white border border-[#c2c6d8] rounded-xl text-xs font-bold focus:border-[#0054cc] outline-none"
+                      className="w-full pl-8 pr-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs font-mono outline-none focus:bg-white focus:border-blue-600"
                     />
                   </div>
+                </div>
 
-                  <div>
-                    <label className="block text-xs font-bold text-[#424655] mb-1">
-                      기사님/담당자 연락처 (휴대폰 번호) <span className="text-red-500">*</span>
-                    </label>
-                    <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#727787]" />
-                      <input
-                        type="text"
-                        value={invitePhone}
-                        onChange={(e) => setInvitePhone(e.target.value)}
-                        placeholder="예: 010-9876-5432"
-                        required
-                        className="w-full pl-9 pr-3 py-3 bg-white border border-[#c2c6d8] rounded-xl text-xs font-bold focus:border-[#0054cc] outline-none"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#424655] mb-1">
-                      초대 시 전달할 수리 요청 메모
-                    </label>
-                    <textarea
-                      rows={2}
-                      value={inviteMemo}
-                      onChange={(e) => setInviteMemo(e.target.value)}
-                      placeholder="예: 에어컨 냉방 불량 현장 점검 및 수리 견적 요청건입니다."
-                      className="w-full p-3 bg-white border border-[#c2c6d8] rounded-xl text-xs font-medium focus:border-[#0054cc] outline-none resize-none"
-                    />
-                  </div>
+                <div>
+                  <label className="block text-xs font-semibold text-neutral-700 mb-1">
+                    요청 메모
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={inviteMemo}
+                    onChange={(e) => setInviteMemo(e.target.value)}
+                    placeholder="예: 에어컨 냉방 불량 현장 점검 및 견적 요청"
+                    className="w-full px-3 py-2 bg-neutral-50 border border-neutral-200 rounded-lg text-xs outline-none focus:bg-white focus:border-blue-600 resize-none"
+                  />
                 </div>
 
                 <div className="pt-2 flex justify-end gap-2">
                   <button
                     type="button"
                     onClick={() => setShowInviteModal(false)}
-                    className="px-4 py-3 bg-[#f0eded] text-[#424655] font-bold text-xs rounded-xl hover:bg-[#e5e2e1] cursor-pointer"
+                    className="px-3 py-1.5 border border-neutral-200 text-neutral-600 font-semibold text-xs rounded-lg hover:bg-neutral-50 cursor-pointer"
                   >
                     취소
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-3 bg-[#0054cc] hover:bg-[#066bfd] text-white font-extrabold text-xs rounded-xl shadow-md cursor-pointer flex items-center gap-1.5"
+                    className="px-3.5 py-1.5 bg-[#0F172A] hover:bg-[#1E293B] text-white font-semibold text-xs rounded-lg shadow-xs cursor-pointer flex items-center gap-1.5"
                   >
-                    <Share2 className="w-4 h-4" />
-                    <span>대화방 초대 링크 생성 및 발송</span>
+                    <Share2 className="w-3.5 h-3.5" />
+                    <span>초대 링크 생성</span>
                   </button>
                 </div>
               </form>
             ) : (
-              /* Step 2: Link Generated & Send Success Screen */
-              <div className="space-y-5 animate-in fade-in duration-300">
-                <div className="text-center space-y-2">
-                  <div className="w-12 h-12 bg-[#10B981]/15 text-[#065F46] rounded-full flex items-center justify-center mx-auto">
-                    <Check className="w-6 h-6 text-[#10B981]" />
+              <div className="space-y-4">
+                <div className="text-center space-y-1">
+                  <div className="w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                    <Check className="w-4 h-4" />
                   </div>
-                  <h3 className="text-lg font-extrabold text-[#1b1c1c]">
-                    수리업체 초대 링크가 발송되었습니다!
+                  <h3 className="text-xs font-bold text-neutral-900">
+                    초대 링크가 생성되었습니다
                   </h3>
-                  <p className="text-xs text-[#727787]">
-                    <strong>{inviteVendorName}</strong> ({invitePhone}) 님에게 전송된 링크로 접속 시 로그인 없이 즉시 대화방에 참여하게 됩니다.
+                  <p className="text-[11px] text-neutral-500 font-mono">
+                    {inviteVendorName} ({invitePhone})
                   </p>
                 </div>
 
-                {/* Invite Link Box */}
-                <div className="p-3.5 bg-[#f6f3f2] rounded-2xl border border-[#c2c6d8] space-y-2">
-                  <span className="text-[11px] font-bold text-[#424655] block">
-                    생성된 전용 초대 링크 (노로그인 다이렉트 입장):
-                  </span>
-                  <div className="flex items-center gap-2 bg-white p-2.5 rounded-xl border border-[#c2c6d8]/60">
-                    <LinkIcon className="w-4 h-4 text-[#0054cc] shrink-0" />
-                    <span className="text-xs text-[#0054cc] font-mono truncate flex-1">
+                <div className="p-3 bg-neutral-50 rounded-lg border border-neutral-200 space-y-2">
+                  <div className="flex items-center gap-1.5 bg-white p-2 rounded border border-neutral-200">
+                    <LinkIcon className="w-3.5 h-3.5 text-neutral-400 shrink-0" />
+                    <span className="text-[11px] text-neutral-600 font-mono truncate flex-1">
                       {fullInviteUrl}
                     </span>
                     <button
                       type="button"
                       onClick={handleCopyInviteLink}
-                      className="px-3 py-1.5 bg-[#0054cc] text-white font-bold text-xs rounded-lg hover:bg-[#066bfd] transition-all cursor-pointer flex items-center gap-1 shrink-0"
+                      className="px-2 py-1 bg-[#0F172A] text-white font-semibold text-[10px] rounded hover:bg-[#1E293B] transition-colors cursor-pointer flex items-center gap-1 shrink-0"
                     >
-                      <Copy className="w-3.5 h-3.5" />
+                      <Copy className="w-3 h-3" />
                       <span>복사</span>
                     </button>
                   </div>
                   {copiedToast && (
-                    <p className="text-[11px] font-bold text-[#10B981] flex items-center gap-1 animate-in fade-in">
+                    <p className="text-[11px] font-semibold text-emerald-600 flex items-center gap-1">
                       <Check className="w-3 h-3" />
-                      초대 링크가 클립보드에 복사되었습니다!
+                      <span>초대 링크가 클립보드에 복사되었습니다.</span>
                     </p>
                   )}
                 </div>
 
-                {/* Test Direct Vendor Join Button */}
-                <div className="p-4 bg-[#E6F4EA] rounded-2xl border border-[#10B981]/30 space-y-2">
-                  <p className="text-xs font-extrabold text-[#065F46] flex items-center gap-1.5">
-                    <Building2 className="w-4 h-4 text-[#10B981]" />
-                    <span>[시뮬레이션] 수리업체 입장에서 대화 바로 테스트</span>
-                  </p>
-                  <p className="text-[11px] text-[#065F46]/80 leading-relaxed">
-                    아래 버튼을 누르면 별도 회원가입 없이 수리업체(기사님) 시점으로 대화방에 즉시 입장하여 견적을 등록하거나 메시지를 보내실 수 있습니다.
+                <div className="p-3 bg-emerald-50/50 rounded-lg border border-emerald-200 space-y-1.5">
+                  <p className="text-xs font-semibold text-emerald-900 flex items-center gap-1">
+                    <Building2 className="w-3.5 h-3.5 text-emerald-600" />
+                    <span>[테스트] 수리업체 시점으로 바로 입장</span>
                   </p>
                   <button
                     type="button"
                     onClick={handleDirectJoinAsVendor}
-                    className="w-full py-3 bg-[#10B981] hover:bg-[#059669] text-white font-extrabold text-xs rounded-xl shadow-xs transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                    className="w-full py-2 bg-emerald-700 hover:bg-emerald-800 text-white font-semibold text-xs rounded-md shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1"
                   >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>수리업체 시점으로 바로 대화방 입장하기</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>수리업체 모드로 참여하기</span>
                   </button>
                 </div>
 
-                <div className="pt-1 flex justify-end">
+                <div className="pt-1">
                   <button
                     type="button"
                     onClick={() => {
                       setShowInviteModal(false);
                       setGeneratedInviteCode(null);
                     }}
-                    className="w-full py-3 bg-[#f0eded] hover:bg-[#e5e2e1] text-[#1b1c1c] font-extrabold text-xs rounded-xl cursor-pointer"
+                    className="w-full py-2 border border-neutral-200 hover:bg-neutral-50 text-neutral-700 font-semibold text-xs rounded-lg cursor-pointer"
                   >
                     닫기
                   </button>

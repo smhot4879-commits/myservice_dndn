@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Bell, CheckCheck, Wrench, MessageSquare, FileText, Scale, ArrowLeft, Trash2 } from 'lucide-react';
+import { Bell, CheckCheck, Wrench, MessageSquare, FileText, Scale, ArrowLeft } from 'lucide-react';
 import { formatActionDate, formatActionDateTime, formatRelativeTime } from '../lib/dateUtils';
 
 export const NotificationsView: React.FC = () => {
@@ -34,126 +34,143 @@ export const NotificationsView: React.FC = () => {
     }
   };
 
+  const getNotifIcon = (type: string) => {
+    switch (type) {
+      case 'REPAIR':
+        return <Wrench className="w-3.5 h-3.5 text-blue-600" />;
+      case 'MESSAGE':
+        return <MessageSquare className="w-3.5 h-3.5 text-emerald-600" />;
+      case 'CONTRACT':
+        return <FileText className="w-3.5 h-3.5 text-amber-600" />;
+      default:
+        return <Scale className="w-3.5 h-3.5 text-neutral-600" />;
+    }
+  };
+
   return (
-    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-300">
+    <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-200">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#c2c6d8]/40 pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-neutral-200 pb-4">
         <div>
           <button
             onClick={() => setActiveTab('dashboard')}
-            className="flex items-center gap-1.5 text-[#424655] hover:text-[#0054cc] font-bold text-sm cursor-pointer mb-1"
+            className="flex items-center gap-1.5 text-neutral-500 hover:text-neutral-900 font-semibold text-xs cursor-pointer mb-1.5 transition-colors"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-3.5 h-3.5" />
             <span>대시보드로 돌아가기</span>
           </button>
-          <h2 className="text-2xl font-extrabold text-[#1b1c1c] flex items-center gap-2">
-            <Bell className="w-6 h-6 text-[#0054cc]" />
-            <span>알림 센터</span>
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-xl sm:text-2xl font-bold text-neutral-900 tracking-tight">
+              알림 센터
+            </h2>
+            <span className="font-mono text-xs text-neutral-400 font-medium">
+              실시간 업데이트
+            </span>
+          </div>
+          <p className="text-xs text-neutral-500 mt-1">
+            수리 요청, 3사 견적 도착, 협의 대화 및 계약 갱신 알림
+          </p>
         </div>
 
         <button
           onClick={markAllNotificationsRead}
-          className="px-4 py-2.5 bg-[#f0eded] hover:bg-[#e5e2e1] text-[#1b1c1c] font-bold text-xs rounded-xl transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-3 py-1.5 bg-white border border-neutral-200 hover:bg-neutral-50 text-neutral-700 font-semibold text-xs rounded-lg transition-all cursor-pointer flex items-center gap-1.5 shadow-xs"
         >
-          <CheckCheck className="w-4 h-4 text-[#0054cc]" />
-          <span>모두 읽음으로 표시</span>
+          <CheckCheck className="w-3.5 h-3.5 text-neutral-500" />
+          <span>모두 읽음 처리</span>
         </button>
       </div>
 
-      {/* Filter Tabs */}
-      <div className="flex gap-2 border-b border-[#c2c6d8]/30 pb-2 overflow-x-auto">
+      {/* Filter Tabs: Segmented Control */}
+      <div className="flex items-center gap-1 p-1 bg-neutral-100 rounded-lg max-w-fit overflow-x-auto">
         <button
           onClick={() => setFilter('ALL')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            filter === 'ALL' ? 'bg-[#0054cc] text-white' : 'bg-[#f0eded] text-[#424655]'
+          className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+            filter === 'ALL'
+              ? 'bg-white text-neutral-900 shadow-xs border border-neutral-200/50'
+              : 'text-neutral-500 hover:text-neutral-900'
           }`}
         >
           전체 ({notifications.length})
         </button>
         <button
           onClick={() => setFilter('REPAIR')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            filter === 'REPAIR' ? 'bg-[#0054cc] text-white' : 'bg-[#f0eded] text-[#424655]'
+          className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+            filter === 'REPAIR'
+              ? 'bg-white text-neutral-900 shadow-xs border border-neutral-200/50'
+              : 'text-neutral-500 hover:text-neutral-900'
           }`}
         >
-          수리 건
+          수리
         </button>
         <button
           onClick={() => setFilter('MESSAGE')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            filter === 'MESSAGE' ? 'bg-[#0054cc] text-white' : 'bg-[#f0eded] text-[#424655]'
+          className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+            filter === 'MESSAGE'
+              ? 'bg-white text-neutral-900 shadow-xs border border-neutral-200/50'
+              : 'text-neutral-500 hover:text-neutral-900'
           }`}
         >
           대화
         </button>
         <button
           onClick={() => setFilter('CONTRACT')}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-            filter === 'CONTRACT' ? 'bg-[#0054cc] text-white' : 'bg-[#f0eded] text-[#424655]'
+          className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+            filter === 'CONTRACT'
+              ? 'bg-white text-neutral-900 shadow-xs border border-neutral-200/50'
+              : 'text-neutral-500 hover:text-neutral-900'
           }`}
         >
-          계약 알림
+          계약
         </button>
       </div>
 
       {/* Notification List */}
-      <div className="bg-white p-6 rounded-3xl shadow-xs border border-[#c2c6d8]/40 space-y-3">
+      <div className="bg-white p-5 sm:p-6 rounded-xl shadow-xs border border-neutral-200 space-y-2">
         {filtered.length === 0 ? (
-          <div className="py-12 text-center text-[#727787] text-sm">
+          <div className="py-12 text-center text-neutral-400 text-xs font-mono">
             등록된 알림이 없습니다.
           </div>
         ) : (
-          filtered.map((n) => (
-            <div
-              key={n.id}
-              onClick={() => handleNotifClick(n)}
-              className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-start gap-4 ${
-                n.isRead
-                  ? 'bg-white border-[#c2c6d8]/30 opacity-75'
-                  : 'bg-[#dae2ff]/20 border-[#0054cc] shadow-2xs font-semibold'
-              }`}
-            >
+          <div className="divide-y divide-neutral-100">
+            {filtered.map((n) => (
               <div
-                className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                  n.type === 'REPAIR'
-                    ? 'bg-[#0054cc]/15 text-[#0054cc]'
-                    : n.type === 'MESSAGE'
-                    ? 'bg-[#10B981]/15 text-[#10B981]'
-                    : n.type === 'CONTRACT'
-                    ? 'bg-[#F59E0B]/15 text-[#F59E0B]'
-                    : 'bg-[#7a24df]/15 text-[#7a24df]'
+                key={n.id}
+                onClick={() => handleNotifClick(n)}
+                className={`py-3 px-3 rounded-lg transition-colors cursor-pointer flex items-start gap-3.5 ${
+                  n.isRead
+                    ? 'hover:bg-neutral-50/70 opacity-70'
+                    : 'bg-blue-50/30 hover:bg-blue-50/50'
                 }`}
               >
-                {n.type === 'REPAIR' ? (
-                  <Wrench className="w-5 h-5" />
-                ) : n.type === 'MESSAGE' ? (
-                  <MessageSquare className="w-5 h-5" />
-                ) : n.type === 'CONTRACT' ? (
-                  <FileText className="w-5 h-5" />
-                ) : (
-                  <Scale className="w-5 h-5" />
-                )}
-              </div>
+                <div className="w-8 h-8 rounded-lg bg-neutral-100 border border-neutral-200 flex items-center justify-center shrink-0 mt-0.5">
+                  {getNotifIcon(n.type)}
+                </div>
 
-              <div className="flex-1 space-y-1">
-                <div className="flex justify-between items-center gap-2">
-                  <h4 className="text-sm font-bold text-[#1b1c1c] truncate">{n.title}</h4>
-                  <span
-                    className="text-[11px] text-[#727787] shrink-0 whitespace-nowrap flex items-center gap-1.5"
-                    title={formatActionDateTime(n.createdAt)}
-                  >
-                    <span className="text-[#424655] font-medium">{formatActionDate(n.createdAt)}</span>
-                    <span className="text-[#c2c6d8]">•</span>
-                    <span className="font-semibold text-[#0054cc]">
+                <div className="flex-1 min-w-0 space-y-0.5">
+                  <div className="flex justify-between items-baseline gap-2">
+                    <div className="flex items-center gap-1.5 truncate">
+                      {!n.isRead && (
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-600 shrink-0" />
+                      )}
+                      <h4 className="text-xs font-bold text-neutral-900 truncate">
+                        {n.title}
+                      </h4>
+                    </div>
+                    <span
+                      className="text-[11px] text-neutral-400 font-mono shrink-0 whitespace-nowrap"
+                      title={formatActionDateTime(n.createdAt)}
+                    >
                       {formatRelativeTime(n.createdAt, n.timestamp)}
                     </span>
-                  </span>
+                  </div>
+                  <p className="text-xs text-neutral-500 leading-relaxed">
+                    {n.message}
+                  </p>
                 </div>
-                <p className="text-xs text-[#424655] leading-relaxed">{n.message}</p>
               </div>
-            </div>
-          ))
+            ))}
+          </div>
         )}
       </div>
     </div>
