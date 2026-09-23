@@ -215,45 +215,45 @@ export const ChatView: React.FC = () => {
       {/* Main Chat Window */}
       <div className="bg-white rounded-xl shadow-xs border border-neutral-200 flex flex-col h-[calc(100vh-180px)] min-h-[500px] max-h-[720px] overflow-hidden">
         {/* Stream Header */}
-        <div className="p-3 sm:p-4 border-b border-neutral-200 flex justify-between items-center bg-white shrink-0">
-          <div className="flex items-center gap-2.5 min-w-0">
+        <div className="p-3.5 sm:p-4 border-b border-neutral-200 flex justify-between items-center bg-white shrink-0">
+          <div className="flex items-center gap-3 min-w-0">
             <button
               onClick={() => setActiveTab('dashboard')}
-              className="p-1 hover:bg-neutral-100 rounded text-neutral-500 cursor-pointer shrink-0 transition-colors"
+              className="p-1.5 hover:bg-neutral-100 rounded-lg text-neutral-600 hover:text-neutral-900 cursor-pointer shrink-0 transition-colors"
               title="대시보드로 돌아가기"
             >
               <ArrowLeft className="w-4 h-4" />
             </button>
             <div className="min-w-0">
               <div className="flex items-center gap-2 truncate">
-                <span className="font-bold text-sm text-neutral-900 truncate">
+                <span className="font-bold text-base text-neutral-900 truncate">
                   {currentCase.title}
                 </span>
-                <span className="font-mono text-xs text-neutral-400 shrink-0">
+                <span className="font-mono text-sm font-semibold text-neutral-600 shrink-0">
                   {currentCase.unit}
                 </span>
               </div>
-              <p className="text-[11px] text-neutral-400 font-mono truncate mt-0.5">
+              <p className="text-xs text-neutral-600 font-medium font-mono truncate mt-0.5">
                 {currentCase.tenantName} · {currentCase.category}
               </p>
             </div>
           </div>
 
           {/* Header Actions */}
-          <div className="flex items-center gap-1.5 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <button
               onClick={() => {
                 setGeneratedInviteCode(null);
                 setShowInviteModal(true);
               }}
-              className="px-2.5 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold text-xs rounded-md flex items-center gap-1 cursor-pointer transition-colors"
+              className="px-3 py-1.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 font-semibold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition-colors"
             >
-              <UserPlus className="w-3.5 h-3.5 text-neutral-600" />
+              <UserPlus className="w-3.5 h-3.5 text-neutral-700" />
               <span className="hidden sm:inline">업체 초대</span>
             </button>
             <button
               onClick={() => setActiveTab('estimates')}
-              className="px-2.5 py-1.5 bg-[#0F172A] hover:bg-[#1E293B] text-white font-semibold text-xs rounded-md flex items-center gap-1 cursor-pointer shadow-xs transition-colors"
+              className="px-3 py-1.5 bg-[#0F172A] hover:bg-[#1E293B] text-white font-semibold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer shadow-xs transition-colors"
             >
               <Receipt className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">견적 ({currentCase.estimates.length})</span>
@@ -262,22 +262,22 @@ export const ChatView: React.FC = () => {
         </div>
 
         {/* Messages Scroll Area */}
-        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 space-y-3 bg-neutral-50/40">
+        <div ref={messagesContainerRef} className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 bg-neutral-50/50">
           {/* Embedded Move In Record Card */}
           {currentCase.moveInRecord && (
-            <div className="bg-white p-3.5 rounded-lg border border-neutral-200 space-y-2 max-w-md mx-auto shadow-xs">
-              <div className="flex items-center justify-between text-xs font-semibold text-neutral-900">
+            <div className="bg-white p-4 rounded-xl border border-neutral-200 space-y-2.5 max-w-lg mx-auto shadow-2xs">
+              <div className="flex items-center justify-between text-sm font-bold text-neutral-900">
                 <span className="flex items-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-blue-600" />
                   <span>입주 시 상태 사진 기록</span>
                 </span>
-                <span className="text-[10px] text-neutral-400 font-mono">{currentCase.moveInRecord.recordedAt}</span>
+                <span className="text-xs text-neutral-500 font-mono font-medium">{currentCase.moveInRecord.recordedAt}</span>
               </div>
-              <p className="text-xs text-neutral-600 leading-relaxed">{currentCase.moveInRecord.note}</p>
+              <p className="text-sm font-medium text-neutral-700 leading-relaxed">{currentCase.moveInRecord.note}</p>
               <img
                 src={currentCase.moveInRecord.photoUrl}
                 alt="Move In Evidence"
-                className="w-full h-32 object-cover rounded border border-neutral-200"
+                className="w-full h-36 object-cover rounded-lg border border-neutral-200"
               />
             </div>
           )}
@@ -293,8 +293,8 @@ export const ChatView: React.FC = () => {
 
             if (isSystem) {
               return (
-                <div key={msg.id} className="flex justify-center my-2">
-                  <div className="bg-neutral-100 text-neutral-600 text-[11px] font-mono px-3 py-1 rounded border border-neutral-200 text-center max-w-md">
+                <div key={msg.id} className="flex justify-center my-3">
+                  <div className="bg-neutral-100/90 text-neutral-800 text-xs sm:text-[13px] font-medium px-4 py-2 rounded-lg border border-neutral-200 text-center max-w-lg shadow-2xs leading-relaxed">
                     {msg.message}
                   </div>
                 </div>
@@ -304,60 +304,60 @@ export const ChatView: React.FC = () => {
             return (
               <div key={msg.id} className={`flex flex-col ${isMe ? 'items-end' : 'items-start'}`}>
                 <div className="flex items-center gap-1.5 mb-1 px-1">
-                  <span className="text-[11px] font-medium text-neutral-500">{msg.senderName}</span>
+                  <span className="text-xs font-bold text-neutral-800">{msg.senderName}</span>
                   {isTechnician && (
-                    <span className="text-[10px] font-semibold text-emerald-700 font-mono">
-                      [수리기사]
+                    <span className="text-[11px] font-bold text-emerald-700 font-mono bg-emerald-50 px-1.5 py-0.2 rounded border border-emerald-200">
+                      수리기사
                     </span>
                   )}
                 </div>
 
                 <div
-                  className={`max-w-[85%] sm:max-w-[75%] p-3 rounded-lg text-xs leading-relaxed ${
+                  className={`max-w-[85%] sm:max-w-[75%] px-4 py-2.5 sm:py-3 rounded-2xl text-sm sm:text-[15px] font-medium leading-relaxed tracking-tight ${
                     isMe
-                      ? 'bg-[#0F172A] text-white shadow-xs'
+                      ? 'bg-[#0F172A] text-white shadow-xs rounded-tr-xs'
                       : isTechnician
-                      ? 'bg-emerald-50 text-emerald-950 border border-emerald-200'
-                      : 'bg-white text-neutral-900 border border-neutral-200 shadow-xs'
+                      ? 'bg-emerald-50 text-emerald-950 border border-emerald-300 shadow-2xs rounded-tl-xs'
+                      : 'bg-white text-neutral-900 border border-neutral-200/90 shadow-2xs rounded-tl-xs'
                   }`}
                 >
-                  <p>{msg.message}</p>
+                  <p className="whitespace-pre-wrap break-words">{msg.message}</p>
 
                   {msg.attachmentUrl && (
                     <img
                       src={msg.attachmentUrl}
                       alt="Attachment"
-                      className="mt-2 rounded border border-black/10 max-h-48 w-full object-cover"
+                      className="mt-2.5 rounded-lg border border-black/10 max-h-52 w-full object-cover"
                     />
                   )}
                 </div>
-                <span className="text-[10px] text-neutral-400 font-mono mt-1 px-1">{msg.timestamp}</span>
+                <span className="text-[11px] text-neutral-500 font-medium font-mono mt-1 px-1">{msg.timestamp}</span>
               </div>
             );
           })}
         </div>
 
         {/* Quick Hashtag Chips */}
-        <div className="px-3 py-1.5 border-t border-neutral-200 bg-white flex items-center gap-1.5 overflow-x-auto shrink-0">
-          <span className="text-[11px] font-mono text-neutral-400 whitespace-nowrap">빠른 태그:</span>
+        <div className="px-3.5 py-2 border-t border-neutral-200 bg-white flex items-center gap-2 overflow-x-auto shrink-0">
+          <span className="text-xs font-bold text-neutral-600 whitespace-nowrap">빠른 태그:</span>
 
           {role === 'VENDOR' ? (
             <>
               <button
                 onClick={() => handleQuickHashtag('VENDOR_QUOTE')}
-                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
+                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 rounded-md text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border border-neutral-200/60"
               >
                 #견적서_제출
               </button>
               <button
                 onClick={() => handleQuickHashtag('VENDOR_VISIT')}
-                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
+                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 rounded-md text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border border-neutral-200/60"
               >
                 #방문일정_제안
               </button>
               <button
                 onClick={() => handleQuickHashtag('VENDOR_DONE')}
-                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
+                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 rounded-md text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border border-neutral-200/60"
               >
                 #수리완료_보고
               </button>
@@ -366,19 +366,19 @@ export const ChatView: React.FC = () => {
             <>
               <button
                 onClick={() => handleQuickHashtag('MOVE_IN')}
-                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
+                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 rounded-md text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border border-neutral-200/60"
               >
                 #입주상태_기록
               </button>
               <button
                 onClick={() => handleQuickHashtag('VISIT')}
-                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
+                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 rounded-md text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border border-neutral-200/60"
               >
                 #방문요청
               </button>
               <button
                 onClick={() => handleQuickHashtag('PAYMENT')}
-                className="px-2 py-0.5 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded text-[11px] font-medium whitespace-nowrap cursor-pointer transition-colors"
+                className="px-2.5 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-900 rounded-md text-xs font-semibold whitespace-nowrap cursor-pointer transition-colors border border-neutral-200/60"
               >
                 #입금확인
               </button>
@@ -387,7 +387,7 @@ export const ChatView: React.FC = () => {
         </div>
 
         {/* Input Box Bar */}
-        <form onSubmit={handleSend} className="p-2.5 border-t border-neutral-200 flex items-center gap-2 bg-white shrink-0">
+        <form onSubmit={handleSend} className="p-3 border-t border-neutral-200 flex items-center gap-2 bg-white shrink-0">
           <button
             type="button"
             onClick={() => {
@@ -401,10 +401,10 @@ export const ChatView: React.FC = () => {
                 sampleImg
               );
             }}
-            className="p-1.5 text-neutral-400 hover:text-neutral-700 rounded transition-colors cursor-pointer shrink-0"
+            className="p-2 text-neutral-500 hover:text-neutral-900 rounded-lg hover:bg-neutral-100 transition-colors cursor-pointer shrink-0"
             title="사진 첨부"
           >
-            <ImageIcon className="w-4 h-4" />
+            <ImageIcon className="w-5 h-5" />
           </button>
 
           <input
@@ -417,14 +417,14 @@ export const ChatView: React.FC = () => {
                 ? '수리 기사 메시지를 입력하세요 (견적, 일정 등)...'
                 : '대화 메시지를 입력하세요...'
             }
-            className="flex-1 py-1.5 px-3 bg-neutral-50 focus:bg-white border border-neutral-200 focus:border-neutral-400 rounded-lg outline-none text-xs transition-colors"
+            className="flex-1 py-2 px-3.5 bg-neutral-50 focus:bg-white border border-neutral-200 focus:border-neutral-400 rounded-lg outline-none text-sm font-medium text-neutral-900 placeholder:text-neutral-400 transition-colors"
           />
 
           <button
             type="submit"
-            className="p-2 bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer shrink-0"
+            className="p-2.5 bg-[#0F172A] hover:bg-[#1E293B] text-white rounded-lg shadow-xs active:scale-95 transition-all cursor-pointer shrink-0"
           >
-            <Send className="w-3.5 h-3.5" />
+            <Send className="w-4 h-4" />
           </button>
         </form>
       </div>
